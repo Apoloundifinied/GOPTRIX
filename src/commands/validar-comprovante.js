@@ -2,6 +2,7 @@ import { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } from 'discord.
 import Order from '../database/models/Order.js';
 import User from '../database/models/User.js';
 import { getPaymentStatus } from '../services/paymentGatewayService.js';
+import { enqueue, getPosition } from '../services/queueService.js';
 
 export default {
     data: new SlashCommandBuilder()
@@ -89,6 +90,19 @@ export default {
 
                 await order.save();
 
+                let posMsg = '';
+                try {
+                    const ticket = await enqueue({
+                        orderId: order.orderId,
+                        clientId: order.clientId,
+                        clientName: order.clientName,
+                        service: order.service,
+                        guildId: interaction.guild.id,
+                    });
+                    const pos = await getPosition(ticket.queueId, interaction.guild.id);
+                    posMsg = `\nSua posição na fila: ${pos}.`;
+                } catch { }
+
                 try {
                     const clientUser = await interaction.client.users.fetch(order.clientId);
                     const approvalEmbed = new EmbedBuilder()
@@ -99,7 +113,7 @@ export default {
                             { name: 'Servico', value: order.service, inline: true },
                             { name: 'Valor', value: `R$ ${order.finalPrice.toFixed(2)}`, inline: true },
                             { name: 'Email de Envio', value: order.paymentEmail, inline: false },
-                            { name: '📦 Próximo Passo', value: 'Verifique seu email em até 1 hora. Se não houver retorno, procure suporte.', inline: false }
+                            { name: '📦 Próximo Passo', value: `Verifique seu email em até 1 hora. Se não houver retorno, procure suporte.${posMsg}`, inline: false }
                         )
                         .setTimestamp();
                     await clientUser.send({ embeds: [approvalEmbed] });
