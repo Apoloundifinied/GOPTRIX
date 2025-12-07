@@ -1,0 +1,555 @@
+================================================================================
+                 GUIA TECNICO - RESOLUCAO DE PROBLEMAS
+                    GOP TRIX BOT - VERSAO 2.4
+================================================================================
+
+INDICE
+================================================================================
+1. PROBLEMAS DE CONEXAO
+2. PROBLEMAS DE BANCO DE DADOS
+3. PROBLEMAS DE COMANDOS
+4. PROBLEMAS DE PAGAMENTO
+5. PROBLEMAS DE PERFORMANCE
+6. LOGS E DEBUG
+7. PROCEDIMENTOS DE RESTART
+8. CHECKLIST PRE-PRODUCAO
+
+================================================================================
+1. PROBLEMAS DE CONEXAO
+================================================================================
+
+PROBLEMA: "Bot nao conecta ao Discord"
+------------------------------------------
+Causa possivel 1: TOKEN invalido
+Solucao:
+- Verifique .env e confirme TOKEN
+- Se vazio, obtenha novo token no Discord Developer Portal
+- Salve em .env com: TOKEN=seu_token_aqui
+- Reinicie com: npm start
+
+Causa possivel 2: Sem internet
+Solucao:
+- Verifique conexao de rede
+- Tente: ping discord.com
+- Se nao responde, problema eh de rede
+
+Causa possivel 3: IP banido
+Solucao:
+- Se recebe erro "429 Rate Limited"
+- Aguarde 1 hora antes de tentar novamente
+- Use VPN se necessario
+
+PROBLEMA: "Bot aparece offline"
+------------------------------------------
+Causa possivel: Processo travado
+Solucao:
+- Execute: taskkill /F /IM node.exe
+- Aguarde 5 segundos
+- Execute: npm start
+
+PROBLEMA: "Erro de autenticacao"
+------------------------------------------
+Verifique:
+- TOKEN correto em .env
+- CLIENT_ID correto em .env
+- CLIENT_SECRET correto em .env (se usado)
+- Nenhum espaco em branco nos valores
+
+Apos corrigir:
+- Salve arquivo .env
+- Reinicie bot: npm start
+
+================================================================================
+2. PROBLEMAS DE BANCO DE DADOS
+================================================================================
+
+PROBLEMA: "MongoDB nao conecta"
+------------------------------------------
+Erro tipico:
+"MongooseError: Cannot connect to mongodb://localhost:27017"
+
+Solucao 1: Verificar se MongoDB esta rodando
+- Windows: procure "MongoDB" em Servicos
+- Se nao estiver, inicie manualmente
+- Verifique porta padrão: 27017
+
+Solucao 2: Verificar credenciais
+- Verifique MONGO_URI em .env
+- Formato correto: mongodb://usuario:senha@host:27017/banco
+- Se tem espaco em senha, encode em URL
+  Ex: senha "a b" vira "a%20b"
+
+Solucao 3: Verificar firewall
+- Se conecta a MongoDB remoto
+- Firewall pode estar bloqueando porta 27017
+- Adicione excecao no firewall
+
+Solucao 4: Banco nao existe
+- MongoDB cria banco automaticamente
+- Se MONGO_URI aponta para "goptrix"
+- Banco sera criado ao conectar
+
+PROBLEMA: "Saldo nao atualiza"
+------------------------------------------
+Causa: Transacao nao foi salva no banco
+Solucao:
+1. Verifique conexao MongoDB: node diagnose.js
+2. Se conecta, problema eh no codigo
+3. Reinicie bot: npm start
+4. Tente transacao novamente
+
+PROBLEMA: "Dados desapareceram"
+------------------------------------------
+PREVENCAO:
+- Faca backup do banco regularmente
+- Use: mongodump --db goptrix --out ./backup
+- Salve em local seguro
+
+RECUPERACAO:
+- Se tem backup: mongorestore --db goptrix ./backup/goptrix
+- Se nao tem backup, dados sao irrecuperaveis
+- Isso eh critico, implemente backups!
+
+================================================================================
+3. PROBLEMAS DE COMANDOS
+================================================================================
+
+PROBLEMA: "Comando nao eh encontrado / nao aparece"
+------------------------------------------
+Causa 1: Comandos nao foram registrados
+Solucao:
+- Verifique logs ao iniciar
+- Deve dizer: "22 comando(s) slash registrado(s)"
+- Se nao diz, problema na registration
+- Reinicie: npm start
+
+Causa 2: Comando nao foi registrado no servidor correto
+Solucao:
+- Verifique logs
+- Deve listar servidores onde registrou
+- Se seu servidor nao lista, comando nao vai aparecer
+- Aguarde 5 minutos para sincronizar
+- Se nao aparecer, reinicie: npm start
+
+Causa 3: Permissoes incorretas
+Solucao:
+- Bot precisa de permissao "Use Application Commands"
+- Verifique no Discord:
+  * Server Settings > Roles
+  * Procure role do bot (geralmente "Neura")
+  * Confira se tem permissao "Use Application Commands" ativada
+
+PROBLEMA: "Erro ao executar comando"
+------------------------------------------
+Mensagem:
+"O aplicativo nao respondeu" ou "Erro ao executar comando"
+
+Solucao:
+1. Verifique logs do bot
+   - Procure por linhas em vermelho
+   - Nota o erro exato
+
+2. Tipos de erro comum:
+
+   TypeError: Cannot read property X
+   - Dado faltando ou null
+   - Solicite ao user dados corretos
+
+   MongoError: duplicate key
+   - Item duplicado no banco
+   - Usuario tentou registrar 2x
+   - Solicite para evitar duplicacao
+
+3. Apos encontrar erro:
+   - Relate ao desenvolvedor
+   - Inclua mensagem de erro exata
+   - Descreva o que fez antes do erro
+
+PROBLEMA: "Comando trava / fica pendente"
+------------------------------------------
+Causa: Operacao lenta ou infinita
+Solucao:
+1. Aguarde 1 minuto
+2. Se continua, cancele (ESC no Discord nao funciona, apenas close)
+3. Tente novamente
+4. Se problema persiste, reinicie bot
+
+PROBLEMA: "Comissao nao foi creditada"
+------------------------------------------
+Solucao rapida:
+1. Verifique em /vendas se venda foi registrada
+2. Se venda existe, comissao deveria estar creditada
+3. Se comissao falta:
+   - Aguarde 2-3 minutos
+   - Tente comando novamente
+   - Se ainda nao aparece, problema no codigo
+
+Debug:
+1. Acesse banco de dados diretamente
+2. Database: goptrix
+3. Collection: users
+4. Procure usuario
+5. Verifique campo "balance"
+
+PROBLEMA: "Nao consigo abrir ticket"
+------------------------------------------
+Solucao:
+1. Verifique permissao "Manage Channels"
+   - Bot precisa dessa permissao
+   - Se nao tem, solicite admin
+
+2. Se permissao ok:
+   - Botao deve aparecer em determinado canal
+   - Procure por canal com botoes do bot
+   - Se nao encontra, nao foi configurado ainda
+
+3. Alternativa:
+   - Fale com administrador
+   - Admin abre canal de ticket manualmente
+
+================================================================================
+4. PROBLEMAS DE PAGAMENTO
+================================================================================
+
+PROBLEMA: "PIX invalido"
+------------------------------------------
+Solucao:
+1. Verifique tipo de chave:
+   - CPF: precisa de 11 digitos
+   - Email: precisa formato correto (ex@mail.com)
+   - Telefone: precisa de DDD e 9 digitos
+   - Aleatoria: codigo do banco, copia exata
+
+2. Teste chave antes:
+   - Tente receber um PIX da sua propria chave
+   - Se funciona, eh valida
+   - Se nao, corrige
+
+3. Ao solicitar saque:
+   - Digita chave exatamente como registrada no banco
+   - Nenhum espaco ou caractere extra
+   - Se rejeitado, tenta novamente com chave corrigida
+
+PROBLEMA: "Saque foi rejeitado"
+------------------------------------------
+Motivos comuns e solucoes:
+
+Motivo: "Chave PIX invalida"
+Solucao:
+- Verifique chave conforme acima
+- Solicite saque novamente
+- Se continua rejeitando, fale com admin
+
+Motivo: "Saldo insuficiente"
+Solucao:
+- Venda mais CFGs
+- Aguarde comissoes serem creditadas
+- Minimo para saque eh R$ 50
+
+Motivo: "Documento invalido"
+Solucao:
+- Se CPF, verifique se correto
+- Confira com seu banco
+- Tenta com outro tipo de chave
+
+Motivo: "Limite de transacoes excedido"
+Solucao:
+- Seu banco tem limite de transferencias
+- Aguarde proximo dia util
+- Tente saque menor
+
+PROBLEMA: "Transferencia nao chegou"
+------------------------------------------
+Checklist:
+1. Verifique se foi aprovada (/saques-pendentes)
+   - Se nao aparece, nao foi aprovada
+
+2. Se foi aprovada:
+   - Aguarde 15 minutos
+   - PIX eh instantaneo, mas pode levar uns segundos
+
+3. Se nao chegou mesmo apos 15 min:
+   - Verifique banco se recebeu
+   - Se nao recebeu, problema eh no banco
+   - Entre em contato com seu banco
+
+4. Se recebeu no banco:
+   - Procure em "Transferencias Recebidas"
+   - Pode estar como "Pendente" se banco eh lento
+   - Aguarde 1 hora, deve confirmar
+
+5. Se nada funcionou:
+   - Reporte para administrador
+   - Tenha numero de transacao pronto
+   - Faca solicitacao de reembolso
+
+================================================================================
+5. PROBLEMAS DE PERFORMANCE
+================================================================================
+
+PROBLEMA: "Bot lento / responde devagar"
+------------------------------------------
+Causa 1: Muitos usuarios
+Solucao:
+- Bot pode processar ~1000 comandos/segundo
+- Se tem centenas de usuarios ativos, eh esperado delay
+- Nao eh problema, eh normal
+
+Causa 2: MongoDB sobrecarregado
+Solucao:
+- Verifique latencia do banco: use diagnose.js
+- Se conexao esta lenta, problema eh na rede
+- Tente usar MongoDB cloud em vez de local
+
+Causa 3: Memoria insuficiente
+Solucao:
+- Abra Task Manager
+- Procure processo "node.exe"
+- Se usa mais de 500MB, problema
+- Reinicie bot: npm start
+
+PROBLEMA: "Comandos descontinuados / versao antiga"
+------------------------------------------
+Solucao:
+- Atualize bot para versao 2.4
+- Backup dados primeiro
+- Reinstale dependencias: npm install
+- Reinicie: npm start
+
+================================================================================
+6. LOGS E DEBUG
+================================================================================
+
+ACESSANDO LOGS
+------------------------------------------
+Os logs aparecem no terminal quando bot esta rodando.
+
+Tipos de mensagens:
+
+[INFO] - Informacao normal
+Exemplo: "Bot conectado"
+Acao: Nenhuma
+
+[WARN] - Aviso, algo pode estar errado
+Exemplo: "Comissao nao creditada"
+Acao: Investigar causa
+
+[ERROR] - Erro critico
+Exemplo: "MongoError: connection failed"
+Acao: Corrigir imediatamente
+
+ENTENDENDO MENSAGENS DE ERRO
+------------------------------------------
+
+Erro: "Cannot read property 'balance' of undefined"
+Significa: Usuario nao existe no banco
+Causa possivel: Banco vazio ou usuario nao foi criado
+
+Erro: "Duplicate key error"
+Significa: Item ja existe no banco
+Causa possivel: Usuario tentou registrar 2x
+
+Erro: "EADDRINUSE: address already in use :::3000"
+Significa: Porta 3000 ja esta sendo usada
+Solucao: taskkill /PID <PID> /F
+
+COLETANDO INFORMACOES PARA SUPORTE
+------------------------------------------
+Se precisa relatar problema:
+
+1. Copie a mensagem de erro exata
+2. Identifique quando ocorreu
+3. Que comando foi executado
+4. Qual usuario estava usando
+5. Todos os passos antes do erro
+
+Exemplo bom de relatorio:
+"Erro ao executar /comprar
+Mensagem: TypeError: Cannot read property 'email'
+Hora: 19:30 de 3 de dezembro
+Usuario: @usuario123
+Passos: 1. Cliquei /comprar 2. Preenchei modal 3. Erro apareceu"
+
+Exemplo ruim:
+"Bot nao funciona"
+
+================================================================================
+7. PROCEDIMENTOS DE RESTART
+================================================================================
+
+RESTART SIMPLES
+------------------------------------------
+Use quando: Comando travou ou bot lento
+
+Passos:
+1. Localize terminal onde bot esta rodando
+2. Pressione CTRL+C
+3. Aguarde "Bot desligado" aparecer
+4. Execute: npm start
+
+Tempo: ~5 segundos
+
+RESTART FORCADO
+------------------------------------------
+Use quando: Bot nao responde a CTRL+C
+
+Passos:
+1. Abra nova aba do terminal / PowerShell
+2. Execute: taskkill /F /IM node.exe
+3. Aguarde 2 segundos
+4. Execute: npm start
+
+Tempo: ~10 segundos
+
+RESTART COMPLETO (COM BANCO)
+------------------------------------------
+Use quando: Suspeita de corrupcao no banco
+
+Passos:
+1. Parar bot (CTRL+C ou taskkill)
+2. Aguarde 10 segundos
+3. Parar MongoDB se em local: net stop MongoDB
+4. Aguarde 10 segundos
+5. Reiniciar MongoDB: net start MongoDB
+6. Reiniciar bot: npm start
+
+Tempo: ~1 minuto
+
+RESTART EM PRODUCAO (SEM DOWNTIME)
+------------------------------------------
+Se tem multiplos bots ou load balancer:
+
+1. Inicie novo bot em porta diferente
+2. Transfira trafego para novo bot
+3. Desligue bot antigo
+4. Resultado: usuarios nao percebem interrupcao
+
+Isso eh avancado, requer arquitetura especial.
+
+================================================================================
+8. CHECKLIST PRE-PRODUCAO
+================================================================================
+
+ANTES DE ABRIR PARA USUARIOS
+------------------------------------------
+
+[ ] Database conectando
+    Executar: node diagnose.js
+    Esperado: "Database conectado"
+
+[ ] Todos os 22 comandos registrados
+    Esperado: "22 comando(s) slash registrado(s)"
+
+[ ] Bot em todos os servidores necessarios
+    Verifique com: node diagnose.js
+    Esperado: "2 servidor(s)" ou mais
+
+[ ] API respondendo
+    Abra browser: http://localhost:3000/api/health
+    Esperado: {"status": "online"}
+
+[ ] Permissoes do bot corretas
+    Servidor > Role do Bot > Permissoes:
+    [ ] Send Messages
+    [ ] Embed Links
+    [ ] Use Application Commands
+    [ ] Manage Channels
+    [ ] Manage Roles
+
+[ ] Variaveis de ambiente corretas
+    Verifique .env tem:
+    [ ] TOKEN
+    [ ] CLIENT_ID
+    [ ] CLIENT_SECRET
+    [ ] MONGO_URI
+    [ ] PIX_KEY
+
+[ ] Comissao configurada em 10%
+    Verifique: src/services/saleService.js
+    Procure: const commission = sale * 0.10
+
+[ ] Agendador ativo
+    Logs devem dizer: "Scheduler de follow-up iniciado"
+
+[ ] Sem erros nos logs
+    Terminal: sem mensagens [ERROR]
+
+[ ] Teste completo de venda
+    1. Criar parceiro: /criar-parceiro
+    2. Fazer compra: /comprar
+    3. Verificar comissao: /vendas
+    4. Solicitar saque: /solicitar-saque
+    5. Aprovar saque: /aprovar-saque
+
+[ ] Se todos os itens acima estao checados
+    RESULTADO: Bot esta pronto para producao!
+
+PROBLEMA DURANTE CHECKLIST
+------------------------------------------
+Se algum item falhar:
+1. Consulte secao correspondente deste guia
+2. Tente solucao recomendada
+3. Se nao funciona, releia e tente outra solucao
+4. Se ainda nao funciona, busque suporte
+
+NAO lance em producao com items falhando!
+Isso resultara em problemas para usuarios.
+
+================================================================================
+RESUMO DE COMANDOS TECHNICOS
+================================================================================
+
+Validar bot:
+node setup.js
+
+Diagnosticar problemas:
+node diagnose.js
+
+Iniciar bot:
+npm start
+
+Parar bot:
+CTRL+C
+
+Forcar parada:
+taskkill /F /IM node.exe
+
+Limpar banco (CUIDADO!):
+mongosh
+> use goptrix
+> db.dropDatabase()
+
+Backup banco:
+mongodump --db goptrix --out ./backup
+
+Restaurar banco:
+mongorestore --db goptrix ./backup/goptrix
+
+Ver processos node:
+tasklist /FI "IMAGENAME eq node.exe"
+
+Ver porta em uso:
+netstat -ano | findstr :3000
+
+Liberar porta:
+taskkill /PID <PID> /F
+
+================================================================================
+SUPORTE FINAL
+================================================================================
+
+Se nada funcionar:
+1. Leia este guia novamente
+2. Abra um ticket no Discord
+3. Forneca informacoes exatas do erro
+4. Aguarde resposta do suporte
+
+Email: suporte@goptrix.com (se existir)
+Discord: Servidor de suporte (se existir)
+
+Documentacao: Ver GUIA_COMPLETO_USO.txt
+
+================================================================================
+                         FIM DO GUIA TECNICO
+                   Versao 2.4 - Dezembro 2025
+================================================================================

@@ -1,0 +1,624 @@
+================================================================================
+                 SISTEMA COMPLETO DE PAGAMENTO E VALIDACAO
+                      GOP TRIX BOT - VERSAO 2.5
+================================================================================
+
+INDICE
+================================================================================
+1. VISAO GERAL DO SISTEMA
+2. FLUXO COMPLETO DE PAGAMENTO
+3. GUIA DO CLIENTE
+4. GUIA DO ADMINISTRADOR
+5. STATUS E ESTADOS
+6. RELATORIOS E AUDITORIA
+7. TROUBLESHOOTING
+
+================================================================================
+1. VISAO GERAL DO SISTEMA
+================================================================================
+
+OBJETIVO
+O novo sistema de pagamento garante que:
+- Cliente ve a chave PIX do bot para transferir
+- Cliente envia comprovante por print/screenshot
+- Admin valida a autenticidade do comprovante
+- Comissoes sao creditadas automaticamente
+- Sistema eh totalmente auditavel
+
+COMPONENTES
+- Banco de dados: Armazena todos os pedidos e comprovantes
+- Chave PIX: Armazenada no .env (nao aparece no codigo)
+- Comandos de cliente: /processar-compra, /enviar-comprovante
+- Comandos de admin: /validar-comprovante, /saques-pendentes
+- Notificacoes: DM automaticas ao cliente
+
+SEGURANCA
+- Cada pedido tem ID unico (UUID)
+- Prazo de 24 horas para pagamento
+- Admin valida antes de creditar comissao
+- Historico completo de todas as transacoes
+
+================================================================================
+2. FLUXO COMPLETO DE PAGAMENTO
+================================================================================
+
+ETAPA 1: CLIENTE INICIA COMPRA
+------------------------------------------
+Cliente executa: /processar-compra
+
+Parametros:
+- Servico: CFG, Otimizacao ou Suporte
+- Preco: Valor em R$
+
+Exemplo:
+/processar-compra servico:CFG preco:100
+
+ETAPA 2: CLIENTE PREENCHE FORMULARIO
+------------------------------------------
+Modal aparece pedindo:
+- Email: Para onde enviar o produto (CFG, etc)
+- Codigo de Afiliado: ID do afiliado que indicou (opcional)
+
+Se usar codigo de afiliado valido:
+- Recebe 5% de desconto
+- Afiliado ganha 10% de comissao
+
+Exemplo:
+Email: cliente@email.com
+Codigo: af-12345678-abcd
+
+ETAPA 3: BOT GERA PEDIDO E MOSTRA PAGAMENTO
+------------------------------------------
+Bot exibe embed com:
+- ID do Pedido (unico, exemplo: 123e4567-e89b-12d3-a456-426614174000)
+- Servico (CFG)
+- Valor Original: R$ 100,00
+- Desconto: -R$ 5,00 (se usou afiliado)
+- Valor a Pagar: R$ 95,00
+- Chave PIX: a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p (copiavel)
+- Instrucoes passo-a-passo
+- Prazo: 24 horas
+
+Botoes:
+[Copiar Chave PIX] [Enviar Comprovante]
+
+ETAPA 4: CLIENTE FAZ O PAGAMENTO
+------------------------------------------
+Cliente faz PIX para a chave fornecida com:
+- Valor exato: R$ 95,00
+- Descricao (opcional): "Compra CFG - 123e4567"
+
+Cliente aguarda comprovante chegar (instantaneo com PIX).
+
+ETAPA 5: CLIENTE ENVIA COMPROVANTE
+------------------------------------------
+Cliente clica botao: [Enviar Comprovante]
+
+Ou digita: /enviar-comprovante
+
+Modal aparece pedindo:
+- Descricao do Comprovante: Ex: "Pix enviado, valor R$ 95.00, banco XYZ"
+- Hash/ID do PIX: ID da transacao PIX (opcional, se conseguir)
+
+Cliente envia.
+
+ETAPA 6: BOT NOTIFICA ADMIN
+------------------------------------------
+Bot envia mensagem em canal #admin-pagamentos (se existir):
+- ID do Pedido
+- Nome do Cliente
+- Servico e Valor
+- Descricao do Comprovante
+- Hash do PIX
+- Botoes: [Validar Comprovante] [Rejeitar Comprovante]
+
+ETAPA 7: ADMIN VALIDA OU REJEITA
+------------------------------------------
+Admin tem duas opcoes:
+
+OPCAO A - Validar (Comprovante OK)
+Admin digita: /validar-comprovante ordem-id:123e4567-e89b-12d3-a456-426614174000 aprovado:true
+
+Resultado:
+- Pedido marcado como VALIDADO
+- Comissao creditada ao afiliado (se houver)
+- Cliente notificado via DM que foi aprovado
+- Cliente recebe email com acesso ao produto
+
+OPCAO B - Rejeitar (Comprovante Invalido)
+Admin digita: /validar-comprovante ordem-id:123e4567-e89b-12d3-a456-426614174000 aprovado:false motivo:"Valor incorreto, esperado 95.00"
+
+Resultado:
+- Pedido marcado como REJEITADO
+- Motivo registrado no banco
+- Cliente notificado via DM com o motivo
+- Cliente pode tentar enviar outro comprovante
+
+================================================================================
+3. GUIA DO CLIENTE
+================================================================================
+
+COMO COMPRAR
+------------------------------------------
+
+Passo 1: Iniciar compra
+Digite: /processar-compra
+
+Passo 2: Selecionar servico
+Escolha: CFG, Otimizacao ou Suporte
+Digite o preco em R$
+
+Passo 3: Preencher dados
+Email: seu@email.com (para receber produto)
+Afiliado: (deixe em branco se nao tem)
+
+Passo 4: Ver preco e chave PIX
+Bot mostra:
+- Valor a pagar
+- Chave PIX (em formato copiavel)
+- Instrucoes
+
+Passo 5: Fazer o PIX
+Abra seu app bancario
+Va em: PIX > Transferencia > Chave
+Cole a chave PIX do bot
+Valor: Exatamente como mostrado
+Enviar
+
+Passo 6: Copiar comprovante
+Apos PIX enviado, voce ja recebe mensagem:
+- "PIX enviado com sucesso"
+- Print/screenshot dessa mensagem
+
+Passo 7: Enviar comprovante
+Clique no botao: [Enviar Comprovante]
+Ou digite: /enviar-comprovante
+
+Descreva:
+"PIX enviado em [hora], valor R$ [valor], [seu banco]"
+
+Se tiver Hash/ID do PIX, envie tambem (aparece em alguns bancos)
+
+Passo 8: Aguardar validacao
+Admin recebera notificacao
+Normalmente valida em minutos/horas
+Voce recebera DM quando for validado
+
+Passo 9: Receber acesso
+Apos validacao:
+- Voce recebe DM: "Pagamento Validado!"
+- Email com acesso ao produto
+- CFG/Servico disponivel
+
+USANDO CODIGO DE AFILIADO
+------------------------------------------
+Se alguem indicou um codigo de afiliado:
+
+No passo 3 (formulario):
+Codigo de Afiliado: af-12345678-abcd-ef90
+
+Beneficio para voce:
+- Desconto de 5% no valor
+- Ex: R$ 100 vira R$ 95
+
+Como obter codigo de afiliado?
+- Fale com afiliado e peca o codigo
+- Ou vire afiliado com: /criar-parceiro
+
+E SE O COMPROVANTE FOR REJEITADO?
+------------------------------------------
+Se admin rejeitou seu comprovante:
+
+1. Voce recebera DM explicando por que
+2. Exemplos de motivos:
+   - "Valor incorreto, esperado 95.00"
+   - "Data invalida, comprovante muito antigo"
+   - "Hash nao corresponde ao pedido"
+
+3. Para corrigir:
+   - Leia o motivo com atencao
+   - Corrija o problema
+   - Envie novo comprovante com /enviar-comprovante
+
+4. Se problema persistir:
+   - Fale com administrador no servidor
+   - Explique o problema
+   - Pode ser necessario fazer nova compra
+
+================================================================================
+4. GUIA DO ADMINISTRADOR
+================================================================================
+
+CONFIGURACAO INICIAL
+------------------------------------------
+
+1. Verificar PIX no .env
+   Arquivo: .env
+   Linha: PIX_KEY=8490abb9-4ee8-4cb8-83aa-191fba284395
+   (use sua chave PIX real)
+
+2. Criar canal de admin (opcional)
+   Nome: #admin-pagamentos
+   Privado: Sim
+   Permissoes: Apenas admins
+
+3. Se nao tiver canal, bot tentara enviar em #admin
+   Se nao existir, notificacoes nao vao aparecer
+
+RECEBENDO NOTIFICACOES
+------------------------------------------
+
+Quando cliente envia comprovante:
+
+1. Voce recebera notificacao em #admin-pagamentos
+2. Mensagem contem:
+   - ID do Pedido
+   - Nome do Cliente
+   - Servico e Valor
+   - Descricao do Comprovante
+   - Botoes ou comando a usar
+
+3. Voce tem tempo ilimitado para validar
+4. Mas cliente fica aguardando
+
+VALIDANDO COMPROVANTE (APROVANDO)
+------------------------------------------
+
+Cenario: Voce confirma que recebeu o PIX
+
+Comando:
+/validar-comprovante ordem-id:123e4567-e89b-12d3-a456-426614174000 aprovado:true
+
+Resultado automatico:
+1. Pedido marcado como VALIDADO
+2. Se tiver afiliado, comissao creditada
+3. Cliente notificado via DM
+4. Email enviado com acesso
+
+O que voce faz agora:
+1. Enviar produto por email (CFG, etc)
+2. Ou liberar acesso em outro sistema
+3. Registrar em seus sistemas internos (se tiver)
+
+REJEITANDO COMPROVANTE
+------------------------------------------
+
+Cenario: Comprovante nao confere, valor errado, etc
+
+Comando:
+/validar-comprovante ordem-id:123e4567-e89b-12d3-a456-426614174000 aprovado:false motivo:"Valor incorreto, esperado 95.00, recebemos 90.00"
+
+Resultado automatico:
+1. Pedido marcado como REJEITADO
+2. Comissao NAO creditada
+3. Cliente notificado com motivo
+4. Cliente pode tentar novamente
+
+Motivos comuns:
+- "Valor diferente do esperado"
+- "Hash do PIX nao corresponde"
+- "Comprovante de outro pedido"
+- "Transferencia para conta errada"
+- "Data muito antiga, prazo expirou"
+
+CHECANDO SAQUES PENDENTES
+------------------------------------------
+
+Para ver saques aguardando aprovacao:
+/saques-pendentes
+
+Mostra:
+- ID do saque
+- Cliente
+- Valor
+- Data de solicitacao
+- Status
+
+Se cliente fez saque:
+1. Verifique em /saques-pendentes
+2. Use /aprovar-saque para liberar
+3. Ou /rejeitar-saque se houver problema
+
+GERANDO RELATORIOS
+------------------------------------------
+
+Para relatorio de vendas:
+/relatorio
+
+Mostra:
+- Total de vendas do dia
+- Total de comissoes
+- Usuarios que venderam
+- Valores por servico
+
+AUDITORIA COMPLETA
+------------------------------------------
+
+Todos os pedidos sao rastreados:
+- ID unico de pedido
+- Cliente que fez
+- Valor e desconto
+- Afiliado (se usado)
+- Data/hora de criacao
+- Comprovante recebido (descricao)
+- Validacao (sim/nao)
+- Quem validou
+- Data de validacao
+- Se rejeitado, motivo
+
+Isso permite:
+- Resolver disputes
+- Verificar fraudes
+- Auditar afiliados
+- Gerar relatorios financeiros
+
+================================================================================
+5. STATUS E ESTADOS
+================================================================================
+
+ESTADOS DE UM PEDIDO
+------------------------------------------
+
+1. PENDENTE
+   - Pedido acabou de ser criado
+   - Aguardando cliente fazer PIX
+   - Prazo: 24 horas
+
+2. AGUARDANDO-COMPROVANTE
+   - Transicao automatica apos criacao
+   - Cliente deve enviar comprovante em 24h
+
+3. COMPROVANTE-ENVIADO
+   - Cliente enviou comprovante
+   - Aguardando admin validar
+   - Admin recebera notificacao
+
+4. VALIDADO
+   - Admin confirmou comprovante
+   - Comissao creditada (se afiliado)
+   - Cliente notificado
+   - Pronto para enviar produto
+
+5. REJEITADO
+   - Admin rejeitou comprovante
+   - Motivo informado ao cliente
+   - Cliente pode tentar novamente
+
+TRANSICOES
+------------------------------------------
+
+Fluxo normal:
+PENDENTE -> AGUARDANDO-COMPROVANTE -> COMPROVANTE-ENVIADO -> VALIDADO
+
+Fluxo com rejeicao:
+PENDENTE -> AGUARDANDO-COMPROVANTE -> COMPROVANTE-ENVIADO -> REJEITADO
+
+Cliente pode tentar novamente:
+REJEITADO -> COMPROVANTE-ENVIADO -> VALIDADO
+
+PRAZO
+------------------------------------------
+
+Cliente tem 24 horas para:
+1. Fazer o PIX
+2. Enviar comprovante
+
+Se passar de 24 horas:
+- Pedido expira
+- Cliente recebe notificacao
+- Precisa criar novo pedido
+
+Admin tem tempo ilimitado para validar
+(mas cliente fica aguardando)
+
+================================================================================
+6. RELATORIOS E AUDITORIA
+================================================================================
+
+INFORMACOES ARMAZENADAS POR PEDIDO
+------------------------------------------
+
+Identificacao:
+- orderId: UUID unico
+- clientId: ID Discord do cliente
+- clientName: Nome Discord do cliente
+
+Financeiro:
+- originalPrice: Preco original sem desconto
+- finalPrice: Preco com desconto (se afiliado)
+- discount: Valor do desconto
+- affiliateId: ID do afiliado que indicou
+- affiliateCommission: Comissao creditada ao afiliado
+
+Servico:
+- service: Tipo de servico (CFG, Otimizacao, etc)
+- paymentEmail: Email para envio
+
+Pagamento PIX:
+- pixKey: Chave PIX usada
+- pixHash: ID/Hash do PIX fornecido pelo cliente
+- paymentDeadline: Prazo de 24 horas
+
+Comprovante:
+- proofDescription: Descricao do comprovante
+- proofSubmittedAt: Quando foi enviado
+- proofSubmittedBy: Quem enviou (username)
+
+Validacao:
+- status: Estado atual
+- validatedAt: Quando foi validado
+- validatedBy: Quem validou (username)
+- validationNotes: Observacoes do admin
+
+Rejeicao:
+- rejectedAt: Quando foi rejeitado
+- rejectedBy: Quem rejeitou (username)
+- rejectReason: Motivo da rejeicao
+
+CONSULTANDO DADOS
+------------------------------------------
+
+Para ver todos os pedidos (via banco):
+mongosh
+use goptrix
+db.orders.find()
+
+Para ver pedido especifico:
+db.orders.findOne({ orderId: "123e4567-e89b-12d3-a456-426614174000" })
+
+Para ver pedidos de um cliente:
+db.orders.find({ clientId: "123456789" })
+
+Para ver pedidos nao validados:
+db.orders.find({ status: "comprovante-enviado" })
+
+Para ver pedidos rejeitados:
+db.orders.find({ status: "rejeitado" })
+
+EXPORTANDO RELATORIO
+------------------------------------------
+
+Para backup de todos os pedidos:
+mongodump --db goptrix --collection orders --out ./backup
+
+Para restaurar:
+mongorestore --db goptrix ./backup/goptrix
+
+================================================================================
+7. TROUBLESHOOTING
+================================================================================
+
+PROBLEMA: Cliente nao ve a chave PIX
+------------------------------------------
+Causa possivel: .env nao tem PIX_KEY
+
+Solucao:
+1. Verificar .env
+2. Adicionar: PIX_KEY=sua-chave-pix-aqui
+3. Reiniciar bot: npm start
+
+PROBLEMA: Comprovante nao aparece no admin
+------------------------------------------
+Causa possivel: Canal #admin-pagamentos nao existe
+
+Solucao:
+1. Criar canal #admin-pagamentos no Discord
+2. Fazer admin do bot ter acesso
+3. Testar novamente
+
+Se ainda nao funcionar:
+1. Verifique permissoes do bot
+2. Bot precisa de: Send Messages, Read Messages
+
+PROBLEMA: Admin rejeitou mas cliente nao recebeu DM
+------------------------------------------
+Causa possivel: DM desabilitado no Discord
+
+Solucao para cliente:
+1. Verificar configuracoes de privacidade
+2. Permitir DMs de membros do servidor
+3. Tentar novamente
+
+Solucao para admin:
+1. Envie manual a mensagem ao cliente
+2. Avise para ativar DMs
+3. Tente novamente
+
+PROBLEMA: Comissao nao foi creditada
+------------------------------------------
+Verificacao:
+1. Pedido foi validado? (status = validado)
+2. Tinha afiliado? (affiliateId preenchido)
+3. Comissao calculada corretamente? (10% do valor final)
+
+Se tudo ok mas nao creditou:
+1. Pode ter erro no code
+2. Verifique saldo do afiliado em /meu-perfil
+3. Se nao aparece, reporte problema
+
+PROBLEMA: Cliente quer cancelar pedido
+------------------------------------------
+Opcoes:
+
+1. Se nao fez PIX ainda:
+   - Cliente simplesmente nao faz
+   - Pedido expira em 24h
+
+2. Se fez PIX:
+   - Admin deve fazer rejeicao manual
+   - Comando: /validar-comprovante ... aprovado:false motivo:"Cancelamento por solicitacao do cliente"
+   - Client PIX de volta (manual, nao automatico)
+
+3. Se ja validou:
+   - Cliente deve entrar em contato
+   - Pode ser caso especial para reembolso
+
+PROBLEMA: Multiplos comprovantes enviados
+------------------------------------------
+Cenario: Cliente enviou 2 comprovantes para mesmo pedido
+
+Comportamento:
+- Sistema guarda apenas o ultimo
+- Admin deve validar apenas o correto
+- Se necessario, rejeitar e pedir novamente
+
+PROBLEMA: Cliente perdeu ID do pedido
+------------------------------------------
+Solucao:
+1. Pedir para listar ultimos pedidos (via banco)
+2. Listar por email que foi enviado
+3. Listar por data/hora
+
+Comando (para admin):
+mongosh
+use goptrix
+db.orders.find({ paymentEmail: "cliente@email.com" })
+
+================================================================================
+RESUMO DE COMANDOS
+================================================================================
+
+CLIENTE:
+/processar-compra        - Iniciar compra com validacao
+/enviar-comprovante      - Enviar comprovante de PIX
+
+ADMIN:
+/validar-comprovante     - Aprovar ou Rejeitar comprovante
+/saques-pendentes        - Ver saques aguardando
+/aprovar-saque           - Aprovar saque
+/rejeitar-saque          - Rejeitar saque
+/relatorio               - Ver relatorio de vendas
+
+================================================================================
+INFORMACOES IMPORTANTES
+================================================================================
+
+1. SEGURANCA
+   - Chave PIX eh confidencial, nunca compartilhe
+   - Todos os pedidos tem ID unico para rastreamento
+   - Admin pode ver historico completo
+
+2. FRAUDES
+   - Sistema registra todo comprovante
+   - Se fraude detectada, rejeitado
+   - Cliente pode ser bloqueado se multiplas fraudes
+
+3. PRAZOS
+   - Cliente: 24 horas para pagar
+   - Admin: Tempo ilimitado para validar
+   - PIX: Instantaneo (segundos)
+
+4. COMISSOES
+   - Creditadas automaticamente apos validacao
+   - 10% do valor final (com desconto de afiliado aplicado)
+   - Afiliado pode sacar com /solicitar-saque
+
+5. AUDITORIA
+   - Todos os dados sao auditaveis
+   - Nenhuma transacao eh deletada
+   - Relatorios podem ser gerados a qualquer hora
+
+================================================================================
+                         FIM DO MANUAL
+                   Versao 2.5 - Sistema de Pagamento
+================================================================================

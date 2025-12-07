@@ -1,0 +1,490 @@
+================================================================================
+                    GUIA COMPLETO DE USO - GOP TRIX BOT
+                              Versão 2.4
+================================================================================
+
+INDICE
+================================================================================
+1. INTRODUCAO
+2. PRIMEIROS PASSOS
+3. CRIANDO SUA CONTA DE PARCEIRO (AFILIADO)
+4. SISTEMA DE VENDAS PASSO A PASSO
+5. COMO RECEBER PAGAMENTOS (SAQUES)
+6. SISTEMA DE TICKETS (SUPORTE)
+7. PAINEL ADMINISTRATIVO
+8. COMO RESOLVER PROBLEMAS COMUNS
+9. FAQ - PERGUNTAS FREQUENTES
+
+================================================================================
+1. INTRODUCAO
+================================================================================
+
+O GOP TRIX BOT eh um sistema completo de gerenciamento de vendas, afiliados
+e pagamentos integrado no Discord. Este guia vai ensinar como:
+
+- Se registrar como vendedor/parceiro
+- Realizar vendas
+- Receber comissoes
+- Processar saques
+- Resolver problemas tecnicos
+
+O bot foi desenvolvido para automatizar todas essas operacoes com seguranca
+e confiabilidade.
+
+================================================================================
+2. PRIMEIROS PASSOS
+================================================================================
+
+PASSO 1: Verifique se o bot esta no servidor
+------------------------------------------
+- Procure por "Neura" na lista de membros do servidor
+- Se nao encontrar, solicite para um administrador adicionar o bot
+
+PASSO 2: Acesse o canal correto
+------------------------------------------
+- Os comandos funcionam em qualquer canal
+- Recomenda-se usar o canal #bots ou similar
+- Comece digitando /help para ver todos os comandos
+
+PASSO 3: Veja seu perfil
+------------------------------------------
+Digite: /meu-perfil
+
+Voce vera informacoes como:
+- Seu usuario no Discord
+- Seu saldo disponivel
+- Se eh um parceiro/afiliado registrado
+- Historico de transacoes
+
+================================================================================
+3. CRIANDO SUA CONTA DE PARCEIRO (AFILIADO)
+================================================================================
+
+IMPORTANTE: Voce precisa ser parceiro para:
+- Receber comissoes de vendas
+- Fazer saques
+- Acessar relatorios personalizados
+
+COMO REGISTRAR COMO PARCEIRO
+------------------------------------------
+
+PASSO 1: Execute o comando
+Digite: /criar-parceiro
+
+PASSO 2: Preencha o formulario
+Um modal (formulario) vai aparecer com os campos:
+- Nome: Seu nome ou nome da sua loja
+- Descricao: Breve descricao do seu trabalho
+- Email: Seu email para contato
+- Chave PIX: Sua chave PIX para receber pagamentos
+
+PASSO 3: Aguarde confirmacao
+Apos preencher:
+- O bot vai gerar um ID unico de afiliado
+- Voce recebera uma mensagem de confirmacao
+- Seu perfil sera atualizado como "Parceiro Ativo"
+
+O ID DE AFILIADO
+------------------------------------------
+Quando voce virar parceiro, recebera um ID unico. Por exemplo:
+"af-12345678-abcd-ef90"
+
+Este ID eh importante porque:
+- Identifica suas vendas
+- Liga comissoes a sua conta
+- Aparece em seus relatorios
+
+COMPARTILHE COM CLIENTES
+Se voce for compartilhar links ou cupons, inclua seu ID de afiliado
+para que as vendas sejam creditadas a voce.
+
+================================================================================
+4. SISTEMA DE VENDAS PASSO A PASSO
+================================================================================
+
+CENARIO: Voce tem um cliente que quer comprar CFG (servico/produto)
+
+FLUXO COMPLETO DE VENDA
+------------------------------------------
+
+PASSO 1: Cliente pede para comprar
+Exemplo: Cliente entra no servidor e diz "Quero comprar CFG"
+
+PASSO 2: Cliente executa o comando de compra
+Cliente digita: /comprar
+
+PASSO 3: Cliente preenche o formulario
+Um modal aparece com os campos:
+- Quantidade: Quantos CFGs quer (ex: 1, 2, 3...)
+- Email: Email para receber o CFG
+
+PASSO 4: Comissao eh creditada automaticamente
+Sistema automatico:
+- Processa a compra
+- Calcula 10% de comissao
+- Credita na conta do seu parceiro (afiliado)
+- Registra a venda no historico
+
+PASSO 5: Cliente recebe o produto
+Voce entrega o CFG conforme acordado (email, download, etc)
+
+EXEMPLO PRATICO
+------------------------------------------
+Preco do CFG: R$ 100,00
+Cliente compra: 1 unidade
+Comissao (10%): R$ 10,00
+
+SEU SALDO:
+Antes: R$ 0,00
+Depois: R$ 10,00 (creditado automaticamente)
+
+MULTIPLAS VENDAS
+------------------------------------------
+Se voce vender 10 CFGs de R$ 100 cada:
+Total de vendas: R$ 1.000,00
+Sua comissao: R$ 100,00
+
+Cada venda eh creditada INSTANTANEAMENTE em sua conta.
+
+ACOMPANHANDO SUAS VENDAS
+------------------------------------------
+Para ver o historico de vendas, use:
+/vendas
+
+Voce vera:
+- Data e hora de cada venda
+- Valor de cada venda
+- Comissao creditada
+- Total acumulado
+
+================================================================================
+5. COMO RECEBER PAGAMENTOS (SAQUES)
+================================================================================
+
+IMPORTANTE: Voce so pode fazer saque se:
+- Eh um parceiro registrado (/criar-parceiro)
+- Tem saldo minimo de R$ 50,00
+- Cadastrou uma chave PIX valida
+
+PROCESSO DE SAQUE
+------------------------------------------
+
+PASSO 1: Solicite um saque
+Digite: /solicitar-saque
+
+PASSO 2: Preencha o formulario
+Modal vai pedir:
+- Valor: Quanto quer sacar (ex: R$ 100,00)
+- Tipo de chave PIX: CPF, Email, Telefone ou Chave Aleatoria
+- Chave PIX: Sua chave PIX
+
+IMPORTANTE SOBRE PIX
+Chave PIX eh:
+- CPF (sua chave eh seu CPF)
+- Email (conta de email sua)
+- Telefone (seu numero com DDD)
+- Chave aleatoria (codigo gerado pelo seu banco)
+
+Se nao tem certeza qual usar, pergunte ao seu banco.
+
+PASSO 3: Aguarde aprovacao do administrador
+Apos enviar:
+- Administrador recebe notificacao
+- Ele verifica se tudo esta ok
+- Voce eh notificado da aprovacao ou rejeicao
+
+PASSO 4: Receba seu dinheiro
+Apos aprovacao:
+- Transferencia eh enviada via PIX
+- Voce recebe em sua conta no banco
+- Confirmacao eh registrada no sistema
+
+STATUS DO SAQUE
+------------------------------------------
+Para ver o status de seus saques, administrators usam:
+/saques-pendentes
+
+Estados possiveis:
+- PENDENTE: Aguardando aprovacao
+- APROVADO: Aprovado, aguardando envio
+- ENVIADO: Dinheiro foi transferido
+- REJEITADO: Nao foi aprovado (motivo sera informado)
+
+TEMPO DE PROCESSAMENTO
+------------------------------------------
+- Solicitar: Imediato
+- Revisar: 1-24 horas
+- Transferir: 1-2 minutos (PIX eh instantaneo)
+
+RELATORIO DE TRANSACOES
+------------------------------------------
+Para ver seu historico completo:
+/relatorio
+
+Voce vera:
+- Todas as suas vendas
+- Todas as comissoes
+- Todos os saques realizados
+- Saldo atual disponivel
+
+================================================================================
+6. SISTEMA DE TICKETS (SUPORTE)
+================================================================================
+
+PARA ABRIR UM TICKET
+------------------------------------------
+
+Opcao 1: Usar o botao
+- Procure por um botao com texto "Abrir Ticket"
+- Clique nele
+- Preencha o formulario
+
+Opcao 2: Usar comando (se nao houver botao)
+Digite: /fechar-ticket (nota: esse fecha, ha opcao de abrir em outro lugar)
+
+Procure na lista de comandos:
+/help
+
+PREENCHENDO O FORMULARIO DE TICKET
+------------------------------------------
+O formulario pede:
+- Titulo: Resumo do problema (ex: "Nao recebi meu CFG")
+- Descricao: Detalhes completos (ex: "Fiz a compra ontem, nao recebi nada")
+- Prioridade: Baixa, Media ou Alta
+
+APOS ABRIR UM TICKET
+------------------------------------------
+- Um canal privado eh criado automaticamente
+- Apenas voce e administradores acessam
+- Administrador responde sua duvida
+- Problema eh resolvido
+- Ticket eh fechado quando pronto
+
+EXEMPLO DE TICKET
+------------------------------------------
+Titulo: Nao consegui fazer login no CFG
+Descricao: Comprei ontem, recebi o arquivo, mas a senha nao funciona
+Prioridade: Alta
+
+Resultado:
+- Admin recebe notificacao
+- Cria um canal: #ticket-seu-nome
+- Responde com a solucao
+- Problema resolvido em minutos
+
+================================================================================
+7. PAINEL ADMINISTRATIVO
+================================================================================
+
+NOTA: Apenas usuarios com permissao de ADMINISTRADOR conseguem usar.
+
+ACESSANDO O PAINEL
+------------------------------------------
+Digite: /painel-admin
+
+Voce vera:
+- Total de vendas do dia
+- Total de comissoes
+- Usuarios ativos
+- Saques pendentes
+- Status geral do sistema
+
+COMANDOS DE ADMINISTRADOR
+------------------------------------------
+
+1. Aprovar saque
+   /aprovar-saque
+   - Seleciona qual saque vai aprovar
+   - Confirma a transferencia
+
+2. Rejeitar saque
+   /rejeitar-saque
+   - Cancela um saque
+   - Credita o valor de volta na conta do usuario
+
+3. Ver saques pendentes
+   /saques-pendentes
+   - Lista todos os saques aguardando aprovacao
+
+4. Ver pedidos pendentes
+   /pedidos-pendentes
+   - Mostra pedidos que ainda nao foram entregues
+
+5. Gerar relatorio
+   /relatorio
+   - Exporta relatorio de vendas
+   - Pode filtrar por periodo
+
+6. Validar comprovante
+   /validar-comprovante
+   - Confirma que um pagamento foi recebido
+   - Atualiza status da venda
+
+================================================================================
+8. COMO RESOLVER PROBLEMAS COMUNS
+================================================================================
+
+PROBLEMA 1: Bot nao responde aos comandos
+------------------------------------------
+Solucao:
+1. Verificar se bot esta no servidor
+2. Tente usar o comando novamente
+3. Aguarde 2-3 minutos (sincronizacao)
+4. Se persistir, avise administrador
+
+PROBLEMA 2: Comando nao eh encontrado
+------------------------------------------
+Solucao:
+1. Digite /help para ver lista completa
+2. Verifique se digitou o nome correto
+3. Todos os comandos comecam com /
+
+PROBLEMA 3: Nao consigo criar parceiro
+------------------------------------------
+Solucao:
+1. Verifique se ja nao eh parceiro (/meu-perfil)
+2. Se vir "Parceiro: Sim", ja eh registrado
+3. Procure por seu ID de afiliado em seu perfil
+
+PROBLEMA 4: Comissao nao foi creditada
+------------------------------------------
+Solucao:
+1. Verifique em /vendas se a venda foi registrada
+2. Comissao eh 10% automaticamente
+3. Se nao vir a venda, avise administrador
+4. Pode levar 1-5 minutos para aparecer
+
+PROBLEMA 5: Saque foi rejeitado
+------------------------------------------
+Solucao:
+1. Verifique a mensagem com motivo da rejeicao
+2. Corrija o problema (ex: chave PIX invalida)
+3. Solicite um novo saque
+4. Valor voltara a sua conta
+
+PROBLEMA 6: Nao lembro meu ID de afiliado
+------------------------------------------
+Solucao:
+1. Use /meu-perfil
+2. Procure por "ID de Afiliado" ou "Affiliate ID"
+3. Copie e use quando necessario
+
+PROBLEMA 7: Ticket nao aparece
+------------------------------------------
+Solucao:
+1. Verifique permissoes no servidor
+2. Procure por canal #ticket-seu-nome
+3. Se nao existe, bot pode ter tido erro
+4. Tente abrir outro ticket
+
+PROBLEMA 8: Saldo nao atualiza
+------------------------------------------
+Solucao:
+1. Aguarde 2-3 minutos
+2. Digite /meu-perfil novamente
+3. Saldo eh atualizado apos cada transacao
+4. Se problema persistir, avise admin
+
+================================================================================
+9. FAQ - PERGUNTAS FREQUENTES
+================================================================================
+
+P: Qual eh a comissao que recebo?
+R: 10% automaticamente em cada venda. Se CFG custa 100, voce ganha 10.
+
+P: Posso sacar qualquer valor?
+R: Minimo de R$ 50,00. Acima disso, sim.
+
+P: Quanto tempo leva pra receber o saque?
+R: PIX eh instantaneo. Pode levar 1-5 minutos apos aprovacao.
+
+P: Perdi meu ID de afiliado, posso recuperar?
+R: Sim, use /meu-perfil e vera o ID.
+
+P: Posso ter multiplas contas?
+R: Nao recomendado. Mantenha uma conta por usuario.
+
+P: Como aumento meu saldo?
+R: Vendendo mais CFGs. Cada venda gera comissao.
+
+P: E se a compra for cancelada?
+R: Comissao sera revertida e voltara ao saldo do cliente.
+
+P: Posso sacar diariamente?
+R: Sim, sempre que tiver saldo minimo de R$ 50.
+
+P: Meu saque nao chegou?
+R: PIX eh instantaneo. Se nao recebeu em 5 min, avise admin.
+
+P: Como faco para virar administrador?
+R: Nao eh possivel automaticamente. Proprietario do servidor convida.
+
+P: Posso vender para amigos?
+R: Sim, qualquer pessoa no servidor pode comprar.
+
+P: Como eh a seguranca do sistema?
+R: Dados sao protegidos em banco de dados seguro. PIX eh seguro.
+
+P: Posso trocar minha chave PIX?
+R: Sim, no proximo saque use a chave correta.
+
+================================================================================
+RESUMO - FLUXO COMPLETO ATH UMA VENDA
+================================================================================
+
+1. ENTRAR NO SERVIDOR
+   - Verifique se bot "Neura" existe
+
+2. CRIAR CONTA DE PARCEIRO
+   - Digite /criar-parceiro
+   - Preencha formulario com dados
+   - Receba seu ID de afiliado
+
+3. CLIENTE CHEGA
+   - Cliente quer comprar CFG
+   - Voce informa o preco
+
+4. CLIENTE COMPRA
+   - Cliente digita /comprar
+   - Preenche formulario (quantidade, email)
+   - Compra eh registrada
+
+5. VOCE RECEBE COMISSAO
+   - Sistema credita 10% automaticamente
+   - Aparece em seu saldo em 1-5 minutos
+   - Ve em /vendas
+
+6. CLIENTE RECEBE PRODUTO
+   - Voce entrega CFG por email ou outro metodo
+   - Cliente fica satisfeito
+
+7. VOCE FASSA SAQUE
+   - Acumula R$ 50+ em comissoes
+   - Digita /solicitar-saque
+   - Admin aprova em poucas horas
+   - Dinheiro chega via PIX em segundos
+
+FIM DO FLUXO - VENDA CONCLUIDA!
+
+================================================================================
+CONTATO E SUPORTE
+================================================================================
+
+Se tiver duvidas:
+1. Use /help para ver todos os comandos
+2. Abra um ticket com /fechar-ticket
+3. Fale com administrador do servidor
+4. Revise este guia
+
+Email de suporte: suporte@goptrix.com (se existir)
+Discord: Entre no servidor e abra um ticket
+
+================================================================================
+                           FIM DO GUIA
+                    Versao 2.4 - Dezembro 2025
+================================================================================
+
+Este guia foi criado para facilitar o uso do GOP TRIX BOT.
+Atualizacoes podem ocorrer. Consulte regularmente.
+
+Boas vendas!

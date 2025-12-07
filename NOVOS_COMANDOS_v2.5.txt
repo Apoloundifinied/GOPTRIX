@@ -1,0 +1,307 @@
+================================================================================
+                    NOVOS COMANDOS - SISTEMA DE PAGAMENTO
+                       GOP TRIX BOT - VERSAO 2.5
+================================================================================
+
+NOVOS COMANDOS ADICIONADOS
+================================================================================
+
+1. /processar-compra
+   Tipo: Cliente
+   Opcoes:
+   - servico: CFG, Otimizacao ou Suporte (obrigatorio)
+   - preco: Valor em R$ (obrigatorio)
+
+   Exemplo:
+   /processar-compra servico:CFG preco:100
+
+   O que faz:
+   - Cria pedido de compra com ID unico
+   - Pede email e codigo de afiliado
+   - Mostra chave PIX para cliente
+   - Exibe valor a pagar com desconto (se afiliado)
+   - Cria botoes para copiar PIX e enviar comprovante
+   - Define prazo de 24 horas
+
+================================================================================
+
+2. /enviar-comprovante
+   Tipo: Cliente
+   Opcoes: Nenhuma
+
+   Exemplo:
+   /enviar-comprovante
+
+   O que faz:
+   - Busca pedido pendente do cliente
+   - Pede descricao do comprovante
+   - Pede Hash/ID do PIX (opcional)
+   - Notifica admin em #admin-pagamentos
+   - Mostra confirmacao ao cliente
+   - Muda status do pedido para "comprovante-enviado"
+
+================================================================================
+
+3. /validar-comprovante
+   Tipo: Admin (Requer permissao Administrator)
+   Opcoes:
+   - ordem-id: ID do pedido (obrigatorio) - texto copiavel
+   - aprovado: true ou false (obrigatorio)
+   - motivo: Motivo da decisao (opcional)
+
+   Exemplo - Aprovar:
+   /validar-comprovante ordem-id:123e4567-e89b-12d3-a456-426614174000 aprovado:true
+
+   Exemplo - Rejeitar:
+   /validar-comprovante ordem-id:123e4567-e89b-12d3-a456-426614174000 aprovado:false motivo:"Valor incorreto"
+
+   O que faz:
+   - Verifica permissao de admin
+   - Busca pedido no banco
+   - Se aprovado:
+     * Marca como VALIDADO
+     * Credita comissao ao afiliado (se houver)
+     * Notifica cliente via DM
+     * Registra quem validou
+   - Se rejeitado:
+     * Marca como REJEITADO
+     * Notifica cliente com motivo
+     * Nao credita comissao
+
+================================================================================
+
+COMANDOS EXISTENTES QUE FUNCIONAM COM NOVO SISTEMA
+================================================================================
+
+/criar-parceiro
+- Necessario para receber comissoes de afiliado
+
+/meu-perfil
+- Mostra saldo incluindo comissoes creditadas
+
+/vendas
+- Mostra historico de vendas com novos pedidos
+
+/solicitar-saque
+- Permite sacar comissoes recebidas
+
+/saques-pendentes
+- Admin ve saques aguardando validacao
+
+/aprovar-saque
+- Admin aprova saques (agora com comissoes incluidas)
+
+/rejeitar-saque
+- Admin rejeita saques
+
+================================================================================
+
+FLUXO VISUAL
+================================================================================
+
+CLIENTE:
+[/processar-compra] -> [Modal: Email + Afiliado] -> [Mostra PIX + Preco]
+         |
+         v
+    [Cliente faz PIX]
+         |
+         v
+[/enviar-comprovante] -> [Modal: Descricao + Hash] -> [Notifica Admin]
+
+ADMIN:
+[Notificacao em #admin-pagamentos]
+         |
+         v
+[Analisa comprovante]
+         |
+    _____|_____
+   |           |
+   v           v
+[Valida]   [Rejeita]
+   |           |
+   v           v
+[Credita    [Nega]
+ Comissao]
+
+CLIENTE (APOS):
+[Notificacao: Aprovado/Rejeitado]
+   |
+   v
+[Se Aprovado: Recebe Email com Acesso]
+[Se Rejeitado: Pode Enviar Novo Comprovante]
+
+================================================================================
+
+MELHORIAS NESTA VERSAO
+================================================================================
+
+ANTES (Versao 2.4):
+- Cliente fazia compra direto
+- Nao havia verificacao de pagamento
+- Comissao era creditada automaticamente
+- Sem rastreamento de comprovantes
+- Sem validacao de admin
+
+AGORA (Versao 2.5):
++ Cliente ve chave PIX completa
++ Cliente envia comprovante de pagamento
++ Admin valida autenticidade do PIX
++ Comissao creditada apenas apos validacao
++ Historico completo auditavel
++ Deteccao de fraudes possivel
++ Controle total sobre saques
++ Rastreamento completo de pedidos
+
+================================================================================
+
+CAMPOS ARMAZENADOS NO BANCO
+================================================================================
+
+Cada pedido armazena:
+
+Identificacao:
+- orderId: ID unico (UUID)
+- clientId: ID Discord do cliente
+- clientName: Nome Discord
+
+Valores:
+- originalPrice: Preco sem desconto
+- finalPrice: Preco com desconto
+- discount: Valor de desconto
+- affiliateCommission: Comissao do afiliado
+
+Servico:
+- service: Tipo (CFG, Otimizacao, etc)
+- paymentEmail: Email de envio
+
+Pagamento:
+- pixKey: Chave PIX usada
+- pixHash: ID do PIX
+- paymentDeadline: Prazo (24 horas)
+
+Comprovante:
+- proofDescription: Descricao do cliente
+- proofSubmittedAt: Data/hora do envio
+- proofSubmittedBy: Username de quem enviou
+
+Validacao:
+- status: Estado (pendente, comprovante-enviado, validado, rejeitado)
+- validatedAt: Data da validacao
+- validatedBy: Username de quem validou
+- validationNotes: Observacoes
+
+Rejeicao:
+- rejectedAt: Data da rejeicao
+- rejectedBy: Quem rejeitou
+- rejectReason: Motivo
+
+Criacao:
+- createdAt: Data de criacao
+
+================================================================================
+
+COMO USAR NA PRATICA
+================================================================================
+
+CENARIO 1: CLIENTE FAZ COMPRA SIMPLES
+------------------------------------------
+1. Cliente: /processar-compra servico:CFG preco:100
+2. Cliente preenche: email@email.com, sem afiliado
+3. Bot mostra: PIX e valor R$ 100
+4. Cliente faz PIX de R$ 100
+5. Cliente: /enviar-comprovante
+6. Cliente descreve: "PIX enviado as 14:30, valor 100"
+7. Admin recebe notificacao
+8. Admin: /validar-comprovante ordem-id:... aprovado:true
+9. Cliente recebe: "Pagamento Validado!" via DM
+10. Cliente recebe email com CFG
+
+CENARIO 2: CLIENTE USA AFILIADO
+------------------------------------------
+1. Cliente: /processar-compra servico:CFG preco:100
+2. Cliente preenche: email@email.com, afiliado:af-1234...
+3. Bot mostra: PIX e valor R$ 95 (5% desconto)
+4. Afiliado nao precisa fazer nada, sistema automatico
+5. Cliente faz PIX de R$ 95
+6. Cliente: /enviar-comprovante
+7. Admin: /validar-comprovante ordem-id:... aprovado:true
+8. Sistema credita: R$ 9.50 (10% de 95) ao afiliado
+9. Afiliado pode ver em: /meu-perfil (saldo incluindo comissao)
+10. Afiliado pode: /solicitar-saque para receber
+
+CENARIO 3: COMPROVANTE REJEITADO
+------------------------------------------
+1. Cliente envia comprovante
+2. Admin vê: valor incorreto, esperava 95, recebeu 90
+3. Admin: /validar-comprovante ordem-id:... aprovado:false motivo:"Valor diferente"
+4. Cliente recebe: DM com motivo
+5. Cliente faz novo PIX com valor correto
+6. Cliente: /enviar-comprovante novamente
+7. Admin aprova
+8. Finalizado
+
+================================================================================
+
+DUVIDAS FREQUENTES
+================================================================================
+
+P: E se o cliente fizer PIX errado (valor diferente)?
+R: Admin rejeita, notifica cliente, cliente pode refazer
+
+P: E se o cliente nao enviar comprovante em 24h?
+R: Pedido expira, cliente precisa fazer novo pedido
+
+P: Admin pode enviar PIX para conta errada por acidente?
+R: Admin pode rejeitar, mas cliente ja recebeu crédito. Solicitar manual.
+
+P: Como afiliado recebe comissao?
+R: Sistema credita automaticamente apos validacao. Afiliado ve em /meu-perfil
+
+P: Pode ter fraude?
+R: Sistema registra tudo. Admin deve validar cada comprovante.
+
+P: Hash do PIX eh obrigatorio?
+R: Nao, eh opcional. Ajuda mas nao eh necessario.
+
+P: Posso ver historico completo de um pedido?
+R: Sim, consultando banco de dados (para admins/devs)
+
+P: Email de envio pode ser alterado depois?
+R: Nao, fica registrado no pedido. Cliente precisa avisar admin.
+
+================================================================================
+
+CHECKLIST DE IMPLEMENTACAO
+================================================================================
+
+[X] Comando /processar-compra criado
+[X] Comando /enviar-comprovante criado
+[X] Comando /validar-comprovante atualizado
+[X] Modelo Order atualizado com novos campos
+[X] Notificacoes automaticas para admin
+[X] DM automatica para cliente
+[X] Comissao creditada apos validacao
+[X] Sistema de prazo de 24 horas
+[X] Descricao de comprovante armazenada
+[X] Hash PIX armazenado
+[X] Auditoria completa implementada
+[X] Documentacao criada (SISTEMA_PAGAMENTOS.txt)
+
+================================================================================
+
+PROXIMAS MELHORIAS (FUTURO)
+================================================================================
+
+- Suporte a upload de imagem do comprovante (nao apenas descricao)
+- Webhook para notificacoes em tempo real
+- API publica para consultar status de pedido
+- Integracao com API PIX da instituicao (validacao automatica)
+- Dashboard web para admin gerenciar pedidos
+- Sistema de recorrencia/assinatura
+- Multiplas chaves PIX (rotacao)
+- Webhook de confirma cao de PIX automatica
+
+================================================================================
+                         FIM DO DOCUMENTO
+                    Versao 2.5 - Sistema Completo
+================================================================================
