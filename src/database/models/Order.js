@@ -64,6 +64,19 @@ const OrderSchema = new mongoose.Schema({
         type: String,
         default: null
     },
+    gatewayProvider: {
+        type: String,
+        default: null
+    },
+    gatewayPaymentId: {
+        type: String,
+        default: null,
+        index: true
+    },
+    gatewayStatus: {
+        type: String,
+        default: null
+    },
     proofSubmittedAt: {
         type: Date,
         default: null

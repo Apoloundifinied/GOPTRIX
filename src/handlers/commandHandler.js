@@ -10,13 +10,28 @@ export async function loadCommands(client) {
     const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
     const commands = [];
+    const disabled = new Set([
+        'criar-parceiro',
+        'meu-perfil',
+        'vendas',
+        'painel-admin',
+        'solicitar-saque',
+        'aprovar-saque',
+        'rejeitar-saque',
+        'saques-pendentes',
+        'completar-saque',
+        'confirmar-servico',
+        'processar-venda'
+    ]);
 
     for (const file of commandFiles) {
         const filePath = join(commandsPath, file);
         const command = await import(`file://${filePath}`);
 
         if (command.default?.data && command.default?.execute) {
-            client.commands.set(command.default.data.name, command.default);
+            const name = command.default.data.name;
+            if (disabled.has(name)) continue;
+            client.commands.set(name, command.default);
             commands.push(command.default.data.toJSON());
         }
     }

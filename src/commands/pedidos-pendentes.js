@@ -14,7 +14,7 @@ export default {
         try {
             // Check if user is admin
             const adminRole = interaction.guild.roles.cache.find(role => role.name === 'Admin' || role.name === 'admin');
-            if (!interaction.member.roles.has(adminRole?.id)) {
+            if (!interaction.member.roles.cache.has(adminRole?.id)) {
                 const errorEmbed = createErrorEmbed('❌ Erro', 'Você não possui permissão para usar este comando!');
                 await interaction.editReply({ embeds: [errorEmbed] });
                 return;

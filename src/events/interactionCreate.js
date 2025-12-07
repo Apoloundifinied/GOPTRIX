@@ -5,12 +5,14 @@ import {
     ButtonStyle,
     ModalBuilder,
     TextInputBuilder,
-    TextInputStyle
+    TextInputStyle,
+    AttachmentBuilder
 } from 'discord.js';
 import Ticket from '../database/models/Ticket.js';
 import User from '../database/models/User.js';
 import { v4 as uuidv4 } from 'uuid';
 import { getProductsByCategory, formatPrice, getProductById, getAllCategories } from '../database/catalog.js';
+import { createPixPayment } from '../services/paymentGatewayService.js';
 
 // Helpers
 function sanitizeEmoji(raw) {
@@ -177,15 +179,8 @@ export default {
                         .setStyle(TextInputStyle.Short)
                         .setRequired(true);
 
-                    const codigoAfiliInput = new TextInputBuilder()
-                        .setCustomId('codigo-afili')
-                        .setLabel('Codigo de afiliado (opcional)')
-                        .setStyle(TextInputStyle.Short)
-                        .setRequired(false);
-
                     modal.addComponents(
-                        new ActionRowBuilder().addComponents(emailInput),
-                        new ActionRowBuilder().addComponents(codigoAfiliInput)
+                        new ActionRowBuilder().addComponents(emailInput)
                     );
 
                     await interaction.showModal(modal);
@@ -231,7 +226,6 @@ export default {
                     const Order = Import.default;
 
                     const email = interaction.fields.getTextInputValue('email');
-                    const codigoAfili = interaction.fields.getTextInputValue('codigo-afili') || null;
                     const clientId = interaction.user.id;
                     const clientName = interaction.user.username;
 
@@ -239,20 +233,10 @@ export default {
                     const product = getProductById(productId);
                     if (!product) return await interaction.reply({ content: 'Erro ao determinar produto. Tente novamente.', flags: 64 });
 
-                    if (!email.includes('@')) return await interaction.reply({ content: 'Email invalido', flags: 64 });
+                    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                    if (!emailValid) return await interaction.reply({ content: 'Email inválido', ephemeral: true });
 
-                    let finalPrice = product.price;
-                    let affiliateId = null;
-                    let affiliateCommission = 0;
-
-                    if (codigoAfili) {
-                        const affiliate = await User.findOne({ affiliateId: codigoAfili });
-                        if (affiliate) {
-                            affiliateId = codigoAfili;
-                            finalPrice = product.price * 0.95;
-                            affiliateCommission = finalPrice * 0.10;
-                        }
-                    }
+                    const finalPrice = product.price;
 
                     const orderId = uuidv4();
                     const pixKey = process.env.PIX_KEY || 'chave-pix-padrao@example.com';
@@ -264,9 +248,9 @@ export default {
                         service: product.name,
                         originalPrice: product.price,
                         finalPrice,
-                        discount: product.price - finalPrice,
-                        affiliateId,
-                        affiliateCommission,
+                        discount: 0,
+                        affiliateId: null,
+                        affiliateCommission: 0,
                         status: 'aguardando-comprovante',
                         pixKey,
                         paymentEmail: email,
@@ -275,23 +259,55 @@ export default {
 
                     await order.save();
 
+                    let gatewayInfo = null;
+                    try {
+                        gatewayInfo = await createPixPayment({
+                            amount: finalPrice,
+                            description: `Compra ${product.name}`,
+                            payerEmail: email,
+                            externalReference: orderId,
+                            idempotencyKey: orderId
+                        });
+                        order.gatewayPaymentId = gatewayInfo.paymentId;
+                        order.gatewayProvider = 'mercadopago';
+                        order.pixHash = gatewayInfo.qrCode || null;
+                        await order.save();
+                    } catch (gwErr) {
+                        console.warn('Falha ao criar cobrança PIX na gateway:', gwErr.message);
+                    }
+
                     const paymentEmbed = new EmbedBuilder()
                         .setColor(0x2ECC71)
-                        .setTitle('AGUARDANDO PAGAMENTO PIX')
-                        .setDescription(`Seu pedido foi criado com sucesso! Agora efetue o pagamento.`)
+                        .setTitle('Pagamento PIX')
+                        .setDescription('Pedido criado. Efetue o pagamento via PIX e envie o comprovante.')
                         .addFields(
                             { name: 'ID do Pedido', value: `\`${orderId}\``, inline: false },
-                            { name: 'Produto', value: `${product.name}`, inline: true },
-                            { name: 'Valor a Pagar', value: `R$ ${finalPrice.toFixed(2).replace('.', ',')}`, inline: true }
+                            { name: 'Serviço', value: `${product.name}`, inline: true },
+                            { name: 'Valor', value: `R$ ${finalPrice.toFixed(2).replace('.', ',')}`, inline: true },
+                            ...(gatewayInfo?.qrCode ? [{ name: 'PIX Copia e Cola', value: `\`${gatewayInfo.qrCode}\``, inline: false }] : [{ name: 'Chave PIX', value: `\`${pixKey}\``, inline: false }]),
+                            ...(gatewayInfo?.ticketUrl ? [{ name: 'Link do Boleto PIX', value: gatewayInfo.ticketUrl, inline: false }] : []),
+                            { name: 'Prazo', value: '24 horas', inline: true },
+                            { name: 'Após compra', value: 'Verifique seu email em até 1 hora. Se não houver retorno, procure suporte.', inline: false }
                         )
-                        .setFooter({ text: 'Obrigado por escolher GOP TRIX!' })
                         .setTimestamp();
 
                     const actionRow = new ActionRowBuilder().addComponents(
                         new ButtonBuilder().setCustomId(`enviar-comprovante-${orderId}`).setLabel('Enviar Comprovante').setStyle(ButtonStyle.Success)
                     );
 
-                    await interaction.reply({ embeds: [paymentEmbed], components: [actionRow] });
+                    const files = [];
+                    if (gatewayInfo?.qrBase64) {
+                        try {
+                            const buf = Buffer.from(gatewayInfo.qrBase64, 'base64');
+                            files.push(new AttachmentBuilder(buf, { name: `pix-${orderId}.png` }));
+                        } catch { }
+                    }
+                    await interaction.reply({ embeds: [paymentEmbed], components: [actionRow], files });
+
+                    try {
+                        const user = await interaction.client.users.fetch(clientId);
+                        await user.send({ embeds: [paymentEmbed], files });
+                    } catch { }
                 } catch (error) {
                     console.error('Erro ao processar compra:', error);
                     await interaction.reply({ content: 'Erro: ' + (error.message || error), flags: 64 }).catch(() => { });

@@ -50,7 +50,7 @@ export default {
 
             // Validar valor
             if (value <= 0) {
-                const errorEmbed = createErrorEmbed('❌ Erro', 'O valor deve ser maior que R$ 0,00!');
+                const errorEmbed = createErrorEmbed(' Erro', 'O valor deve ser maior que R$ 0,00!');
                 await interaction.editReply({ embeds: [errorEmbed] });
                 return;
             }
@@ -58,7 +58,7 @@ export default {
             // Validar afiliado existe
             const streamer = await getStreamerByAffiliateId(affiliateId);
             if (!streamer) {
-                const errorEmbed = createErrorEmbed('❌ Erro', `Afiliado ${affiliateId} não encontrado!`);
+                const errorEmbed = createErrorEmbed(' Erro', `Afiliado ${affiliateId} não encontrado!`);
                 await interaction.editReply({ embeds: [errorEmbed] });
                 return;
             }
@@ -82,7 +82,7 @@ export default {
 
             // Resposta ao admin
             const successEmbed = createSuccessEmbed(
-                '✅ Serviço Confirmado',
+                ' Serviço Confirmado',
                 `Serviço registrado com sucesso!\n\n**ID da Venda:** \`${sale.saleId}\`\n**Serviço:** ${service}\n**Cliente:** ${clientName}\n**Valor:** R$ ${value.toFixed(2)}\n**Afiliado:** ${affiliateId}\n**Comissão Creditada:** R$ ${commission.toFixed(2)}\n\n✅ Saldo do streamer foi atualizado!`
             );
 

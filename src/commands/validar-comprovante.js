@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import Order from '../database/models/Order.js';
 import User from '../database/models/User.js';
+import { getPaymentStatus } from '../services/paymentGatewayService.js';
 
 export default {
     data: new SlashCommandBuilder()
@@ -53,19 +54,25 @@ export default {
             }
 
             if (aprovado) {
+                if (order.gatewayPaymentId) {
+                    try {
+                        const gw = await getPaymentStatus(order.gatewayPaymentId);
+                        order.gatewayStatus = gw.status;
+                        await order.save();
+                        if (gw.status !== 'approved') {
+                            await interaction.reply({ content: `Gateway indica status: ${gw.status}. Aprove manualmente apenas se conferiu o comprovante.`, flags: 64 });
+                            return;
+                        }
+                    } catch (gwErr) {
+                        await interaction.reply({ content: `Não foi possível consultar gateway (${gwErr.message}). Prosseguindo com validação manual.`, flags: 64 });
+                    }
+                }
                 order.status = 'validado';
                 order.validatedAt = new Date();
                 order.validatedBy = interaction.user.username;
                 order.validationNotes = motivo;
 
-                if (order.affiliateId) {
-                    const affiliate = await User.findOne({ affiliateId: order.affiliateId });
-                    if (affiliate) {
-                        affiliate.balance += order.affiliateCommission;
-                        affiliate.totalEarnings = (affiliate.totalEarnings || 0) + order.affiliateCommission;
-                        await affiliate.save();
-                    }
-                }
+                // Afiliados removidos
 
                 const client = await User.findOne({ userId: order.clientId });
                 if (client) {
@@ -92,7 +99,7 @@ export default {
                             { name: 'Servico', value: order.service, inline: true },
                             { name: 'Valor', value: `R$ ${order.finalPrice.toFixed(2)}`, inline: true },
                             { name: 'Email de Envio', value: order.paymentEmail, inline: false },
-                            { name: '📦 Próximo Passo', value: 'Aguarde o link de download em breve!', inline: false }
+                            { name: '📦 Próximo Passo', value: 'Verifique seu email em até 1 hora. Se não houver retorno, procure suporte.', inline: false }
                         )
                         .setTimestamp();
                     await clientUser.send({ embeds: [approvalEmbed] });

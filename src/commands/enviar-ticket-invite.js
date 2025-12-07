@@ -18,7 +18,7 @@ export default {
             // Verificar permissões
             if (!interaction.member.permissions.has('ADMINISTRATOR')) {
                 await interaction.editReply({
-                    content: '❌ Apenas administradores podem usar este comando!'
+                    content: ' Apenas administradores podem usar este comando!'
                 });
                 return;
             }

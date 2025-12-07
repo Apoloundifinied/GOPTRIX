@@ -98,7 +98,7 @@ export default {
 
         } catch (error) {
             console.error('Erro ao solicitar saque:', error);
-            const errorEmbed = createErrorEmbed('❌ Erro', 'Erro ao solicitar saque!');
+            const errorEmbed = createErrorEmbed(' Erro', 'Erro ao solicitar saque!');
             await interaction.editReply({ embeds: [errorEmbed] });
         }
     },

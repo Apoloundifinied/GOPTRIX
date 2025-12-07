@@ -288,7 +288,7 @@ export async function handleChannelAutoResponse(interaction) {
 
             if (embedData.fields) {
                 embedData.fields.forEach(field => {
-                    embed.addField(field.name, field.value, field.inline || false);
+                    embed.addFields({ name: field.name, value: field.value, inline: field.inline || false });
                 });
             }
 

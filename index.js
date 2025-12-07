@@ -5,7 +5,6 @@ import { connectDatabase } from './src/database/connection.js';
 import { loadCommands, registerCommands } from './src/handlers/commandHandler.js';
 import { loadEvents } from './src/handlers/eventHandler.js';
 import { startFollowUpScheduler } from './src/services/followUpScheduler.js';
-import affiliateRoutes from './src/routes/affiliateRoutes.js';
 import apiRoutes from './src/routes/apiRoutes.js';
 
 dotenv.config();
@@ -35,7 +34,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api', apiRoutes);
-app.use('/api', affiliateRoutes);
 
 // Startup
 async function startup() {

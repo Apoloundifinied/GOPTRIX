@@ -41,7 +41,7 @@ requiredFiles.forEach(file => {
 // Check 2: Variáveis de ambiente
 console.log('\n🔐 Verificando .env...');
 const envContent = fs.readFileSync('.env', 'utf8');
-const required_vars = ['TOKEN', 'CLIENT_ID', 'CLIENT_SECRET', 'MONGO_URI', 'PIX_KEY'];
+const required_vars = ['TOKEN', 'CLIENT_ID', 'CLIENT_SECRET', 'MONGO_URI', 'ACESS_TOKEN_MERCADO_PAGO'];
 
 required_vars.forEach(varName => {
     if (envContent.includes(varName + '=')) {

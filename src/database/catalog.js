@@ -4,57 +4,15 @@
  */
 
 export const PRODUCTS_CATALOG = {
-    // ═══════════════════════════════════════
-    // 🎮 CFG - CONFIGURAÇÕES PRONTAS
-    // ═══════════════════════════════════════
-    cfg_clean: {
-        id: 'cfg-clean',
-        name: 'CFG Clean',
-        category: 'CFG',
-        subcategory: 'Configuração',
-        price: 35,
-        description: 'Configuração limpa e otimizada para máximas de desempenho',
-        emoji: '⚙️',
-        details: 'CFG padrão otimizada para FPS máximo',
-        type: 'digital'
-    },
-
-    cfg_easync: {
-        id: 'cfg-easync',
-        name: 'CFG Easync',
-        category: 'CFG',
-        subcategory: 'Configuração',
-        price: 50,
-        description: 'Configuração Easync com renderização aprimorada',
-        emoji: '⚡',
-        details: 'CFG com Easync ativado para melhor sincronização',
-        type: 'digital'
-    },
-
-    cfg_fps_pack: {
-        id: 'cfg-fps-pack',
-        name: 'CFG FPS Pack v1',
-        category: 'CFG',
-        subcategory: 'Otimização',
-        price: 65,
-        description: 'Pack completo de otimização FPS v1 com métodos comprovados',
-        emoji: '🚀',
-        details: 'CFG FPS Pack de Otimização v1 - Máximo desempenho',
-        type: 'digital'
-    },
-
-    // ═══════════════════════════════════════
-    // 🔧 OTIMIZAÇÃO - MÉTODOS DIVERSOS
-    // ═══════════════════════════════════════
     otim_basic: {
         id: 'otim-basic',
         name: 'Otimização Básica',
         category: 'Otimização',
         subcategory: 'Método Manual',
-        price: 0.12,
+        price: 49,
         description: 'Otimização básica do sistema operacional',
         emoji: '📊',
-        details: 'Limpeza e otimização básica - Perfeito para iniciantes',
+        details: 'Limpeza e otimização básica',
         type: 'service'
     },
 
@@ -63,22 +21,22 @@ export const PRODUCTS_CATALOG = {
         name: 'Sovietic Method',
         category: 'Otimização',
         subcategory: 'Método Avançado',
-        price: 55,
+        price: 89,
         description: 'Método Sovietic - Otimização profissional avançada',
-        emoji: '🔴',
-        details: 'Método Sovietic de otimização - Resultados garantidos',
+        emoji: '🔧',
+        details: 'Otimização avançada com resultados comprovados',
         type: 'service'
     },
 
     otim_avancada: {
         id: 'otim-avancada',
-        name: 'Otimização Avançada',
+        name: 'Otimização Avançada (Ao Vivo)',
         category: 'Otimização',
         subcategory: 'Ao Vivo',
-        price: 85,
-        description: 'Otimização avançada ao vivo via Anydask - Suporte em tempo real',
+        price: 129,
+        description: 'Otimização avançada ao vivo com suporte',
         emoji: '💻',
-        details: 'Otimização profissional com suporte ao vivo via Anydask',
+        details: 'Sessão ao vivo de otimização via atendimento',
         type: 'service_live'
     },
 
@@ -87,32 +45,12 @@ export const PRODUCTS_CATALOG = {
         name: 'Otimização Ultra + BIOS',
         category: 'Otimização',
         subcategory: 'Ao Vivo',
-        price: 150,
-        description: 'Otimização Ultra com modificação de BIOS ao vivo via Anydask',
-        emoji: '⚡🔧',
-        details: 'Otimização Ultra + BIOS - Máxima performance com suporte ao vivo',
+        price: 199,
+        description: 'Otimização Ultra com ajustes de BIOS',
+        emoji: '⚡',
+        details: 'Máxima performance com ajustes avançados',
         type: 'service_live_bios'
-    },
-
-    // ═══════════════════════════════════════
-    // 💾 CLIENTES & FERRAMENTAS
-    // ═══════════════════════════════════════
-    client_license: {
-        id: 'client-license',
-        name: 'Client',
-        category: 'Cliente',
-        subcategory: 'Software',
-        price: 20,
-        description: 'Client - License de uso',
-        emoji: '📱',
-        details: 'Client para uso pessoal',
-        type: 'digital'
-    },
-
-    // ═══════════════════════════════════════
-    // 📦 PACOTES ESPECIAIS
-    // ═══════════════════════════════════════
-    // Pode adicionar pacotes no futuro
+    }
 };
 
 /**

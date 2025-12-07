@@ -19,11 +19,8 @@ export default {
             const autoResponseChannels = [
                 'boas-vindas',
                 'como-comprar-cfg',
-                'solicitar-saque',
                 'abrir-ticket',
-                'meu-link',
-                'pedidos-pendentes',
-                'painel-admin'
+                'pedidos-pendentes'
             ];
 
             // If first message in channel, send auto-response

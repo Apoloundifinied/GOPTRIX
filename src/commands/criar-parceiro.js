@@ -6,7 +6,7 @@ import Streamer from '../database/models/Streamer.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('criar-parceiro')
-        .setDescription('🤝 Crie uma conta de parceiro')
+        .setDescription(' Crie uma conta de parceiro')
         .addStringOption(option =>
             option
                 .setName('username')
@@ -24,7 +24,7 @@ export default {
             const existingStreamer = await getStreamer(interaction.user.id);
             if (existingStreamer) {
                 const errorEmbed = createErrorEmbed(
-                    '❌ Erro',
+                    ' Erro',
                     'Você já possui uma conta de parceiro!'
                 );
                 await interaction.editReply({ embeds: [errorEmbed] });
@@ -37,7 +37,7 @@ export default {
             });
 
             const successEmbed = createSuccessEmbed(
-                '✅ Parceiro Criado',
+                ' Parceiro Criado',
                 `Bem-vindo ao programa de parceiros!\n\n**Seu ID de Afiliado:** \`${streamer.affiliateId}\`\n\nCompartilhe esse ID com seus clientes para ganhar comissões!`
             );
 
