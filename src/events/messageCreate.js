@@ -18,7 +18,7 @@ export default {
             // List of channels that should trigger auto-responses
             const autoResponseChannels = [
                 'boas-vindas',
-                'como-comprar-cfg',
+                'como-comprar-otimizacao',
                 'abrir-ticket',
                 'pedidos-pendentes'
             ];

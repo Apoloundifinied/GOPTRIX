@@ -12,17 +12,16 @@ export default {
                 .setDescription(`
                     🎉 Olá **${member.user.username}**!
 
-                    Você entrou em um servidor profissional de vendas de CFG com sistema de afiliação completo.
+                    Você entrou no servidor oficial de **otimizações**.
 
-                    Aqui você pode:
-                    💰 **Comprar CFG** com desconto especial
-                    🤝 **Virar afiliado** e ganhar comissões
-                    📊 **Acompanhar vendas** em tempo real
-                    💳 **Sacar suas comissões** via PIX
+                    Aqui você encontra:
+                    🛠️ Otimizações de PC (Básica, Avançada, Ultra + BIOS)
+                    💳 Pagamento PIX com QR direto pelo bot
+                    ⏳ Fila de atendimento com posição transparente
+                    🎫 Tickets privados de suporte
                 `)
                 .setThumbnail(member.user.displayAvatarURL())
-                .setImage('https://media.discordapp.net/attachments/1084817700906229820/1084817725571592304/Sem_titulo_2022-04-15T005638.562.png')
-                .setFooter({ text: '© GOP TRIX | Sistema Profissional de Afiliação', iconURL: member.guild.iconURL() })
+                .setFooter({ text: '© GOP TRIX | Otimizações Profissionais', iconURL: member.guild.iconURL() })
                 .setTimestamp();
 
             // 📋 QUICK START GUIDE EMBED
@@ -32,95 +31,74 @@ export default {
                 .addFields(
                     {
                         name: '1️⃣ Explore os Canais',
-                        value: '→ #boas-vindas | #como-comprar-cfg | #meu-link | #solicitar-saque',
+                        value: '→ #boas-vindas | #loja | #como-comprar-otimizacao | #enviar-comprovante | #abrir-ticket',
                         inline: false
                     },
                     {
                         name: '2️⃣ Conheça os Comandos',
-                        value: 'Use `/help` para ver todos os comandos disponíveis',
+                        value: 'Use `/help` para ver ações de compra, fila e suporte',
                         inline: false
                     },
                     {
-                        name: '3️⃣ Crie seu Perfil',
-                        value: 'Use `/meu-perfil` para acompanhar seu progresso',
+                        name: '3️⃣ Compre sua Otimização',
+                        value: 'Use `/loja`, pague via PIX com o QR, e envie `/enviar-comprovante`',
                         inline: false
                     },
                     {
-                        name: '4️⃣ Comece a Vender',
-                        value: 'Use `/comprar-pix` ou `/comprar` para fazer suas primeiras vendas!',
+                        name: '4️⃣ Acompanhe a Fila',
+                        value: 'Após aprovação, você entra na fila automaticamente. Use `/fila-status`.',
                         inline: false
                     }
-                )
-                .setColor(0x2ecc71);
+                );
 
             // 🎯 CATEGORIES OVERVIEW EMBED
             const categoriesEmbed = new EmbedBuilder()
                 .setColor(0xf39c12)
                 .setTitle('📂 ESTRUTURA DO SERVIDOR')
                 .addFields(
-                    { name: '🌟 INÍCIO', value: 'Boas-vindas, regras e informações gerais', inline: true },
-                    { name: '👥 CLIENTES', value: 'Área para compras e suporte', inline: true },
+                    { name: '🌟 INÍCIO', value: 'Boas-vindas, regras e anúncios', inline: true },
+                    { name: '🧑‍💻 CLIENTES', value: 'Loja, como comprar, enviar comprovante, abrir ticket', inline: true },
                     { name: '\u200b', value: '\u200b', inline: true },
-                    { name: '🤝 PARCEIROS', value: 'Gestão de afiliados e comissões', inline: true },
-                    { name: '🎧 SUPORTE', value: 'Tickets e resolução de problemas', inline: true },
+                    { name: '⏳ FILA', value: 'Fila pública e canais de gestão da fila', inline: true },
+                    { name: '🎧 SUPORTE', value: 'FAQ e canal de suporte', inline: true },
                     { name: '\u200b', value: '\u200b', inline: true },
-                    { name: '👨‍💼 STAFF', value: 'Painel administrativo e logs', inline: true },
-                    { name: '⚙️ SISTEMA', value: 'Configurações e automações', inline: true }
-                )
-                .setColor(0xe74c3c);
+                    { name: '🛠️ STAFF', value: 'Pedidos, fila, logs e dashboard', inline: true }
+                );
 
             // 💡 TIPS EMBED
             const tipsEmbed = new EmbedBuilder()
                 .setColor(0x1abc9c)
                 .setTitle('💡 DICAS IMPORTANTES')
                 .setDescription(`
-                    ⚡ **PIX é nosso padrão** - Pagamentos rápidos e seguros
-
-                    💳 **Desconto de 5%** - Clientes ganham desconto automático
-
-                    🎁 **Comissões automáticas** - Ganhe 10% em cada venda como afiliado
-
-                    🔒 **Segurança** - Use IDs únicos de afiliados em todas as operações
-
-                    ⏰ **Follow-ups** - Receba lembretes automáticos sobre suas vendas
-                `)
-                .setFooter({ text: 'Leia os canais fixados para mais informações' });
+                    ⚡ PIX é o padrão — pague com o QR gerado pelo bot
+                    📧 Pós-compra — verifique seu email em até 1 hora
+                    🔒 Segurança — não compartilhe dados sensíveis em público
+                    ⏳ Fila — acompanhe sua posição com \`/fila-status\`
+                `);
 
             // 🎯 ACTION BUTTONS - Quick access to key channels
             const buttonsRow1 = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
-                        .setLabel('📋 COMO COMPRAR')
-                        .setStyle(ButtonStyle.Link)
-                        .setURL('https://discord.com/channels/' + member.guild.id),
+                        .setLabel('📋 Ajuda')
+                        .setStyle(ButtonStyle.Primary)
+                        .setCustomId('help-open'),
                     new ButtonBuilder()
-                        .setLabel('🤝 VIRAR AFILIADO')
-                        .setStyle(ButtonStyle.Link)
-                        .setURL('https://discord.com/channels/' + member.guild.id),
-                    new ButtonBuilder()
-                        .setLabel('🆘 SUPORTE')
-                        .setStyle(ButtonStyle.Link)
-                        .setURL('https://discord.com/channels/' + member.guild.id)
-                );
-
-            const buttonsRow2 = new ActionRowBuilder()
-                .addComponents(
-                    new ButtonBuilder()
-                        .setLabel('/help')
-                        .setStyle(ButtonStyle.Success),
-                    new ButtonBuilder()
-                        .setLabel('/meu-perfil')
-                        .setStyle(ButtonStyle.Primary),
-                    new ButtonBuilder()
-                        .setLabel('/criar-parceiro')
+                        .setLabel('🎫 Abrir Ticket')
                         .setStyle(ButtonStyle.Secondary)
+                        .setCustomId('create-ticket')
                 );
 
-            // Send beautiful DM with all embeds
-            await member.send({
-                embeds: [mainWelcomeEmbed, quickStartEmbed, categoriesEmbed, tipsEmbed],
-                components: [buttonsRow1, buttonsRow2]
-            });
+            let dmSent = false;
+            try {
+                await member.send({
+                    embeds: [mainWelcomeEmbed, quickStartEmbed, categoriesEmbed, tipsEmbed],
+                    components: [buttonsRow1]
+                });
+                dmSent = true;
+            } catch (dmErr) {
+                dmSent = false;
+            }
 
             // 🎯 Send welcome message to the server's welcome channel (if it exists)
             const welcomeChannel = member.guild.channels.cache.find(
@@ -133,9 +111,8 @@ export default {
                     .setDescription(`
                         🎉 **${member.user.username}** acaba de entrar no servidor!
 
-                        Bem-vindo ao **GOP TRIX** - Sistema Profissional de Afiliação 💰
-
-                        Verifique sua DM para o guia de início rápido! ✨
+                        Bem-vindo ao **GOP TRIX** — Otimizações profissionais.
+                        ${dmSent ? 'Verifique sua DM para o guia de início rápido.' : 'Ative DMs para receber o guia. Use `/help` e visite `#loja` para começar.'}
                     `)
                     .setThumbnail(member.user.displayAvatarURL())
                     .setTimestamp();

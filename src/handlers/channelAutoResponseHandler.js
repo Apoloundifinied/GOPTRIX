@@ -18,99 +18,65 @@ const CHANNEL_RESPONSES = {
                 color: 0x9b59b6,
                 title: '✨ BEM-VINDO AO GOP TRIX ✨',
                 description: `
-                    🎉 Bem-vindo ao servidor oficial de vendas de CFG!
+                    🎉 Bem-vindo ao servidor oficial de otimizações!
 
                     **Aqui você encontra:**
-                    💰 **Compra de CFG** - Produtos de qualidade com desconto
-                    🤝 **Sistema de Afiliação** - Ganhe comissões vendendo
-                    📊 **Acompanhamento** - Controle suas vendas em tempo real
-                    💳 **Saques PIX** - Retire seus ganhos quando quiser
+                    🛠️ **Otimizações de PC** — Básica, Avançada, Ultra + BIOS
+                    💳 **Pagamento PIX** — QR code direto pelo bot
+                    ⏳ **Fila de Atendimento** — Acompanhamento transparente
+                    🎫 **Suporte** — Tickets privados com a equipe
 
                     **Para começar:**
-                    1. Use \`/help\` para conhecer todos os comandos
-                    2. Use \`/criar-parceiro\` para virar um afiliado
-                    3. Use \`/meu-perfil\` para acompanhar seu progresso
-                    4. Explore os canais temáticos do servidor
+                    1. Use \`/help\` para ver ações disponíveis
+                    2. Abra \`/loja\` para escolher sua otimização
+                    3. Pague via PIX e envie \`/enviar-comprovante\`
+                    4. Aguarde aprovação e acompanhe com \`/fila-status\`
                 `,
                 fields: [
-                    { name: '💡 Sistema de Desconto', value: 'Todos os clientes ganham 5% de desconto automático!', inline: false },
-                    { name: '🎁 Comissão de Afiliado', value: 'Ganhe 10% em cada venda realizada por seu link', inline: false },
-                    { name: '⚡ Processamento Rápido', value: 'PIX instantâneo - receba seus ganhos em segundos', inline: false }
+                    { name: '📧 Pós-compra', value: 'Verifique seu email em até 1 hora após a compra. Se não houver retorno, procure suporte.', inline: false },
+                    { name: '🔒 Segurança', value: 'Não compartilhe dados sensíveis em público. A equipe orientará envio seguro.', inline: false }
                 ],
-                footer: { text: '© GOP TRIX | Sistema Profissional de Afiliação' }
+                footer: { text: '© GOP TRIX | Otimizações Profissionais' }
             }
         ],
         buttons: [
             { label: 'Ver Comandos', style: ButtonStyle.Primary, emoji: '📋' },
-            { label: 'Virar Afiliado', style: ButtonStyle.Success, emoji: '🤝' },
             { label: 'Abrir Suporte', style: ButtonStyle.Secondary, emoji: '🎧' }
         ],
         onlyFirst: true
     },
 
-    'como-comprar-cfg': {
+    'como-comprar-otimizacao': {
         embeds: [
             {
                 color: 0x3498db,
-                title: '🛒 COMO COMPRAR CFG',
+                title: '🛒 COMO COMPRAR OTIMIZAÇÃO',
                 description: `
-                    Bem-vindo ao canal de compras! Aqui você pode adquirir CFGs com desconto especial.
+                    Bem-vindo ao canal de compras! Aqui você adquire otimizações profissionais.
 
                     **Processo de Compra:**
-                    1️⃣ Use o comando \`/comprar\` ou \`/comprar-pix\`
-                    2️⃣ Escolha entre pagamento normal ou PIX
-                    3️⃣ Receba o PIX (se PIX) ou processe a venda
-                    4️⃣ Você ganhou desconto de 5% automaticamente! 🎉
+                    1️⃣ Use \`/loja\` e selecione sua otimização
+                    2️⃣ Informe seu email no modal
+                    3️⃣ Pague via PIX com o QR/copia-e-cola exibido
+                    4️⃣ Envie o comprovante usando \`/enviar-comprovante\`
+                    5️⃣ Após aprovação do admin, você entra na fila automaticamente
                 `,
                 fields: [
-                    { name: '💡 Dica 1', value: 'PIX é instantâneo - receba em segundos', inline: false },
-                    { name: '💡 Dica 2', value: 'Desconto automático de 5% em todas as compras', inline: false },
-                    { name: '💡 Dica 3', value: 'Afiliados ganham 10% de comissão', inline: false }
+                    { name: '💡 Dica 1', value: 'Use sempre o QR gerado pelo bot no momento da compra.', inline: false },
+                    { name: '💡 Dica 2', value: 'Guarde seu orderId para consultas e suporte.', inline: false },
+                    { name: '💡 Dica 3', value: 'Após aprovação, consulte \`/fila-status\` para acompanhar.', inline: false }
                 ],
                 thumbnail: { url: 'https://media.discordapp.net/attachments/1000000000000000000/1000000000000000000/shopping.png' }
             }
         ],
         buttons: [
-            { label: 'Comprar Normal', style: ButtonStyle.Success, emoji: '💳' },
-            { label: 'Comprar com PIX', style: ButtonStyle.Primary, emoji: '🔑' },
+            { label: 'Abrir Loja', style: ButtonStyle.Primary, emoji: '🛒' },
             { label: 'Dúvidas?', style: ButtonStyle.Secondary, emoji: '❓' }
         ],
         onlyFirst: true
     },
 
-    'solicitar-saque': {
-        embeds: [
-            {
-                color: 0x2ecc71,
-                title: '💸 SOLICITAR SAQUE',
-                description: `
-                    Bem-vindo ao canal de saques! Aqui você pode solicitar a retirada de suas comissões.
 
-                    **Processo de Saque:**
-                    1️⃣ Use o comando \`/solicitar-saque\`
-                    2️⃣ Especifique o valor e método (PIX)
-                    3️⃣ Aguarde aprovação da staff
-                    4️⃣ Receba seu saque! 🎉
-
-                    **Informações Importantes:**
-                    • Saques são processados em até 24 horas
-                    • Valor mínimo: R$ 50,00
-                    • PIX é nosso método padrão
-                `,
-                fields: [
-                    { name: '⏱️ Tempo de Processamento', value: 'Até 24 horas', inline: true },
-                    { name: '💰 Mínimo', value: 'R$ 50,00', inline: true },
-                    { name: '💳 Método', value: 'PIX', inline: true }
-                ],
-                color: 0x27ae60
-            }
-        ],
-        buttons: [
-            { label: 'Solicitar Saque', style: ButtonStyle.Success, emoji: '💸' },
-            { label: 'Ver Pendentes', style: ButtonStyle.Secondary, emoji: '📋' }
-        ],
-        onlyFirst: true
-    },
 
     'abrir-ticket': {
         embeds: [
@@ -145,40 +111,7 @@ const CHANNEL_RESPONSES = {
         onlyFirst: true
     },
 
-    'meu-link': {
-        embeds: [
-            {
-                color: 0xf39c12,
-                title: '🔗 MEU LINK DE AFILIADO',
-                description: `
-                    Bem-vindo ao painel de afiliados! Aqui você gerencia sua renda passiva.
 
-                    **Como Funciona:**
-                    1️⃣ Você recebe um ID de afiliado único
-                    2️⃣ Clientes usam seu ID ao comprar
-                    3️⃣ Você ganha 10% de comissão automaticamente
-                    4️⃣ Saque suas comissões quando quiser
-
-                    **Seu Painel:**
-                    • Histórico de vendas
-                    • Comissões acumuladas
-                    • Conversões de clientes
-                    • Relatórios detalhados
-                `,
-                fields: [
-                    { name: '💰 Comissão', value: '10% por venda', inline: true },
-                    { name: '🔄 Atualização', value: 'Em tempo real', inline: true },
-                    { name: '🎯 Sem Limite', value: 'Ganhe ilimitado', inline: true }
-                ]
-            }
-        ],
-        buttons: [
-            { label: 'Ver Perfil', style: ButtonStyle.Primary, emoji: '👤' },
-            { label: 'Minhas Vendas', style: ButtonStyle.Success, emoji: '📊' },
-            { label: 'Meu ID', style: ButtonStyle.Secondary, emoji: '🆔' }
-        ],
-        onlyFirst: true
-    },
 
     'pedidos-pendentes': {
         embeds: [
@@ -191,13 +124,11 @@ const CHANNEL_RESPONSES = {
                     Aqui você pode:
                     ✅ Validar comprovantes de pagamento
                     ✅ Aprovar pedidos pendentes
-                    ✅ Gerenciar status das transações
+                    ✅ Gerenciar status e fila de atendimento
 
                     **Ações Disponíveis:**
-                    • \`/validar-comprovante\` - Validar comprovante PIX
-                    • \`/pedidos-pendentes\` - Listar pedidos
-                    • \`/aprovar-saque\` - Aprovar saques
-                    • \`/rejeitar-saque\` - Rejeitar saques
+                        • \`/validar-comprovante\` - Validar comprovante PIX
+                        • \`/fila-lista\` - Listar fila
                 `,
                 fields: [
                     { name: '⚙️ Sistema', value: 'Automático com validação manual', inline: false }
@@ -212,39 +143,7 @@ const CHANNEL_RESPONSES = {
         staffOnly: true
     },
 
-    'painel-admin': {
-        embeds: [
-            {
-                color: 0x34495e,
-                title: '👨‍💼 PAINEL ADMINISTRATIVO',
-                description: `
-                    **Canal Exclusivo da Administração**
 
-                    Gerenciamento Completo do Servidor:
-                    📊 Dashboard com estatísticas
-                    💰 Gestão de saques
-                    🎫 Gerenciamento de tickets
-                    👥 Controle de afiliados
-
-                    **Comandos Disponíveis:**
-                    • \`/painel-admin\` - Ver dashboard
-                    • \`/relatorio\` - Gerar relatórios
-                    • \`/aprovar-saque\` - Aprovar saques
-                    • \`/rejeitar-saque\` - Rejeitar saques
-                `,
-                fields: [
-                    { name: '🔐 Acesso', value: 'Staff apenas', inline: true },
-                    { name: '⚙️ Permissões', value: 'Totais', inline: true }
-                ]
-            }
-        ],
-        buttons: [
-            { label: 'Abrir Painel', style: ButtonStyle.Primary, emoji: '📊' },
-            { label: 'Ver Relatórios', style: ButtonStyle.Secondary, emoji: '📈' }
-        ],
-        onlyFirst: false,
-        staffOnly: true
-    }
 };
 
 /**
