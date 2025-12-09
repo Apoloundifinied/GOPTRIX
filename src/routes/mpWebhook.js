@@ -12,7 +12,7 @@ async function findGuildForUser(client, userId) {
             const guild = await client.guilds.fetch(guildSummary.id);
             const member = await guild.members.fetch(userId).catch(() => null);
             if (member) return guild;
-        } catch {}
+        } catch { }
     }
     return null;
 }
@@ -22,10 +22,10 @@ function findChannelByNames(guild, names) {
     return guild.channels.cache.find(ch => lower.includes(ch.name.toLowerCase())) || null;
 }
 
-router.post('/notification', async (req, res) => {
+async function handleNotification(req, res) {
     try {
         const client = req.app.locals.client;
-        const type = req.body.type || req.query.type;
+        const type = req.body.type || req.query.type || req.body.topic || req.query.topic;
         const action = req.body.action || req.query.action;
         const paymentId = req.body?.data?.id || req.query?.id;
 
@@ -74,17 +74,20 @@ router.post('/notification', async (req, res) => {
                     await channel.send({ content: `✅ Pagamento aprovado para pedido ${order.orderId}. <@${order.clientId}>.${posMsg}` });
                 }
             }
-        } catch {}
+        } catch { }
 
         try {
             const user = await client.users.fetch(order.clientId);
             await user.send({ content: `✅ Pagamento recebido!${posMsg}` });
-        } catch {}
+        } catch { }
 
         return res.status(200).json({ ok: true });
     } catch (err) {
         return res.status(200).json({ ok: true });
     }
-});
+}
+
+router.post('/notification', handleNotification);
+router.post('/', handleNotification);
 
 export default router;

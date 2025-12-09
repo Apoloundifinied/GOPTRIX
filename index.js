@@ -36,6 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api', apiRoutes);
 app.use('/api/mp', mpWebhookRoutes);
+app.use('/webhooks/mercadopago', mpWebhookRoutes);
 
 // Startup
 async function startup() {
