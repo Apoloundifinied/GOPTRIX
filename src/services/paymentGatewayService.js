@@ -47,7 +47,13 @@ export async function getPaymentStatus(paymentId) {
     const headers = { Authorization: `Bearer ${accessToken}` };
 
     const { data } = await axios.get(url, { headers });
-    return { status: data.status, status_detail: data.status_detail };
+    return {
+        status: data.status,
+        status_detail: data.status_detail,
+        external_reference: data.external_reference || null,
+        transaction_amount: data.transaction_amount || null,
+        payer_email: data.payer?.email || null,
+    };
 }
 
 export default { createPixPayment, getPaymentStatus };

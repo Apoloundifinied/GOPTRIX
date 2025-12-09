@@ -9,7 +9,7 @@ export const PRODUCTS_CATALOG = {
         name: 'Otimização Básica',
         category: 'Otimização',
         subcategory: 'Método Manual',
-        price: 49,
+        price: 20,
         description: 'Otimização básica do sistema operacional',
         emoji: '📊',
         details: 'Limpeza e otimização básica',

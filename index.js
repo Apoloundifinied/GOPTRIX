@@ -6,6 +6,7 @@ import { loadCommands, registerCommands } from './src/handlers/commandHandler.js
 import { loadEvents } from './src/handlers/eventHandler.js';
 import { startFollowUpScheduler } from './src/services/followUpScheduler.js';
 import apiRoutes from './src/routes/apiRoutes.js';
+import mpWebhookRoutes from './src/routes/mpWebhook.js';
 
 dotenv.config();
 console.log('📌 Token carregado:', process.env.TOKEN ? '✅' : '❌');
@@ -34,6 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api', apiRoutes);
+app.use('/api/mp', mpWebhookRoutes);
 
 // Startup
 async function startup() {
@@ -80,6 +82,8 @@ async function startup() {
             console.log(`🤖 Bot: ${client.user.tag}`);
             console.log('═'.repeat(50));
         });
+
+        app.locals.client = client;
 
         // Tratamento de erro de porta
         server.on('error', (err) => {
