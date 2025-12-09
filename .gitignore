@@ -1,14 +1,22 @@
-# Dependencies
+# ============================
+# DEPENDENCIES
+# ============================
 node_modules/
 package-lock.json
 yarn.lock
 
-# Environment variables
+
+# ============================
+# ENVIRONMENT VARIABLES
+# ============================
 .env
 .env.local
 .env.*.local
 
-# IDE
+
+# ============================
+# IDE / EDITOR CONFIGS
+# ============================
 .vscode/
 .idea/
 *.swp
@@ -16,16 +24,25 @@ yarn.lock
 *~
 .DS_Store
 
-# Logs
+
+# ============================
+# LOGS
+# ============================
 logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 
-# Build
+
+# ============================
+# BUILD
+# ============================
 dist/
 build/
 
-# Database
+
+# ============================
+# DATABASE FILES
+# ============================
 *.db
 *.sqlite

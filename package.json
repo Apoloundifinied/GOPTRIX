@@ -1,18 +1,19 @@
 {
-  "name": "goptrix-bot",
+  "name": "neura-ai",
   "version": "1.0.0",
   "description": "Bot Discord profissional para gerenciamento de parceiros, vendas e afiliados",
   "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "node --watch index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "discord",
     "bot",
-    "goptrix"
+    "neura",
+    "ai"
   ],
   "author": "",
   "license": "MIT",
