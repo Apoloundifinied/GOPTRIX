@@ -20,7 +20,7 @@ export async function createPixPayment({ amount, description, payerEmail, extern
         payment_method_id: 'pix',
         external_reference: externalReference,
         binary_mode: true,
-        notification_url: process.env.MP_NOTIFICATION_URL || undefined,
+        notification_url: process.env.WEBHOOK_URL_MERCADO_PAGO || process.env.MP_NOTIFICATION_URL || undefined,
         payer: { email: payerEmail },
     };
 

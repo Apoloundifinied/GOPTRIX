@@ -4,10 +4,10 @@
  */
 
 /**
- * Create an animated loading embed
- * @param {string} title - Title of the embed
- * @param {string} description - Description/status text
- * @returns {Object} EmbedBuilder configuration
+
+ * @param {string} title
+ * @param {string} description
+ * @returns {Object}
  */
 export function createLoadingEmbed(title, description) {
     const spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
