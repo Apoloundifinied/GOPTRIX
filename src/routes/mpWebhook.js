@@ -27,7 +27,13 @@ async function handleNotification(req, res) {
         const client = req.app.locals.client;
         const type = req.body.type || req.query.type || req.body.topic || req.query.topic;
         const action = req.body.action || req.query.action;
-        const paymentId = req.body?.data?.id || req.query?.id;
+        let paymentId = req.body?.data?.id || req.query?.id;
+        const resource = req.query?.resource || req.body?.resource;
+
+        if (!paymentId && resource) {
+            const m = String(resource).match(/\/payments\/(\d+)/);
+            if (m) paymentId = m[1];
+        }
 
         if (type !== 'payment' || !paymentId) {
             return res.status(200).json({ ok: true });
@@ -49,7 +55,9 @@ async function handleNotification(req, res) {
         }
 
         order.gatewayStatus = info.status;
-        order.status = 'validado';
+        if (order.status !== 'validado') {
+            order.status = 'validado';
+        }
         order.validatedAt = new Date();
         order.validatedBy = 'gateway:webhook';
         await order.save();
@@ -89,5 +97,7 @@ async function handleNotification(req, res) {
 
 router.post('/notification', handleNotification);
 router.post('/', handleNotification);
+router.get('/notification', handleNotification);
+router.get('/', handleNotification);
 
 export default router;
