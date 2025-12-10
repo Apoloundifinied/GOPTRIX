@@ -8,7 +8,6 @@ import {
     TextInputStyle,
     AttachmentBuilder
 } from 'discord.js';
-import { EMOJI } from '../utils/embedBuilders.js';
 import Ticket from '../database/models/Ticket.js';
 import User from '../database/models/User.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -279,7 +278,7 @@ export default {
 
                     const paymentEmbed = new EmbedBuilder()
                         .setColor(0x2ECC71)
-                        .setTitle(`${EMOJI.verified} Pagamento PIX`)
+                        .setTitle('💳 Pagamento PIX')
                         .setDescription('Pedido criado. Efetue o pagamento via PIX e envie o comprovante.')
                         .addFields(
                             { name: 'ID do Pedido', value: `\`${orderId}\``, inline: false },
@@ -353,7 +352,7 @@ export default {
 
                     const ticketEmbed = new EmbedBuilder()
                         .setColor(0x3498db)
-                        .setTitle(`${EMOJI.arrows} Novo Ticket Aberto`)
+                        .setTitle('🎫 Novo Ticket Aberto')
                         .setDescription(`Bem-vindo ao suporte! Um de nossos staff entrará em contato em breve.`)
                         .addFields(
                             { name: 'ID do Ticket', value: ticketId, inline: true },
@@ -377,7 +376,7 @@ export default {
                     if (logsChannel) {
                         const logEmbed = new EmbedBuilder()
                             .setColor(0x2ecc71)
-                            .setTitle(`${EMOJI.crown} Novo Ticket Aberto`)
+                            .setTitle('📝 Novo Ticket Aberto')
                             .addFields(
                                 { name: 'ID do Ticket', value: ticketId, inline: true },
                                 { name: 'Cliente', value: clientName, inline: true },
