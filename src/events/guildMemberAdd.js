@@ -1,4 +1,5 @@
 import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { EMOJI } from '../utils/embedBuilders.js';
 import User from '../database/models/User.js';
 
 export default {
@@ -8,7 +9,7 @@ export default {
             // ✨ MAIN WELCOME EMBED - Animated welcome with beautiful formatting
             const mainWelcomeEmbed = new EmbedBuilder()
                 .setColor(0x9b59b6)
-                .setTitle('✨ BEM-VINDO AO GOP TRIX ✨')
+                .setTitle(`${EMOJI.crown} BEM-VINDO AO GOP TRIX`)
                 .setDescription(`
                     🎉 Olá **${member.user.username}**!
 
@@ -27,7 +28,7 @@ export default {
             // 📋 QUICK START GUIDE EMBED
             const quickStartEmbed = new EmbedBuilder()
                 .setColor(0x3498db)
-                .setTitle('🚀 COMEÇE AQUI')
+                .setTitle(`${EMOJI.arrows} COMEÇE AQUI`)
                 .addFields(
                     {
                         name: '1️⃣ Explore os Canais',
@@ -54,7 +55,7 @@ export default {
             // 🎯 CATEGORIES OVERVIEW EMBED
             const categoriesEmbed = new EmbedBuilder()
                 .setColor(0xf39c12)
-                .setTitle('📂 ESTRUTURA DO SERVIDOR')
+                .setTitle(`${EMOJI.verified} ESTRUTURA DO SERVIDOR`)
                 .addFields(
                     { name: '🌟 INÍCIO', value: 'Boas-vindas, regras e anúncios', inline: true },
                     { name: '🧑‍💻 CLIENTES', value: 'Loja, como comprar, enviar comprovante, abrir ticket', inline: true },
